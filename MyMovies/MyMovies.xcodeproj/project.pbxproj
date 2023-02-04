@@ -24,6 +24,9 @@
 		BC96BC63298E00FB0003EDD5 /* GETopRatedMoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC96BC62298E00FB0003EDD5 /* GETopRatedMoviesViewController.swift */; };
 		BC96BC65298E01200003EDD5 /* GEUpcomingMoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC96BC64298E01200003EDD5 /* GEUpcomingMoviesViewController.swift */; };
 		BCA73B61298E20B300A5F02B /* GEMoviesBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73B60298E20B300A5F02B /* GEMoviesBaseViewController.swift */; };
+		BCA73B64298E41CE00A5F02B /* GEMovieDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73B63298E41CE00A5F02B /* GEMovieDetailsViewController.swift */; };
+		BCA73B68298E426F00A5F02B /* GEMoviesSerachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73B67298E426F00A5F02B /* GEMoviesSerachViewController.swift */; };
+		BCA73B6C298E4CFB00A5F02B /* GEFavoritesMoviesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73B6B298E4CFB00A5F02B /* GEFavoritesMoviesViewController.swift */; };
 		C23AC5AC33DF0DCA6FB92CFD /* Pods_MyMoviesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE90A0E01DFE58DC3044A673 /* Pods_MyMoviesTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +72,9 @@
 		BC96BC62298E00FB0003EDD5 /* GETopRatedMoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GETopRatedMoviesViewController.swift; sourceTree = "<group>"; };
 		BC96BC64298E01200003EDD5 /* GEUpcomingMoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEUpcomingMoviesViewController.swift; sourceTree = "<group>"; };
 		BCA73B60298E20B300A5F02B /* GEMoviesBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEMoviesBaseViewController.swift; sourceTree = "<group>"; };
+		BCA73B63298E41CE00A5F02B /* GEMovieDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEMovieDetailsViewController.swift; sourceTree = "<group>"; };
+		BCA73B67298E426F00A5F02B /* GEMoviesSerachViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEMoviesSerachViewController.swift; sourceTree = "<group>"; };
+		BCA73B6B298E4CFB00A5F02B /* GEFavoritesMoviesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEFavoritesMoviesViewController.swift; sourceTree = "<group>"; };
 		BD75B34E4581D07A0F481E90 /* Pods-MyMovies-MyMoviesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovies-MyMoviesUITests.release.xcconfig"; path = "Target Support Files/Pods-MyMovies-MyMoviesUITests/Pods-MyMovies-MyMoviesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C554D16B52A4A57DE5A49CAC /* Pods_MyMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4C2CB22DB0BA2A34E9318AC /* Pods-MyMovies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovies.debug.xcconfig"; path = "Target Support Files/Pods-MyMovies/Pods-MyMovies.debug.xcconfig"; sourceTree = "<group>"; };
@@ -227,6 +233,9 @@
 				BC96BC5B298E00610003EDD5 /* Popular */,
 				BC96BC5C298E00690003EDD5 /* Top Rated */,
 				BC96BC5D298E00730003EDD5 /* Upcoming */,
+				BCA73B65298E424400A5F02B /* MoviesSeach */,
+				BCA73B62298E419F00A5F02B /* MovieDetails */,
+				BCA73B6D298E4D0800A5F02B /* FavoritesMovies */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -277,6 +286,30 @@
 				BCA73B60298E20B300A5F02B /* GEMoviesBaseViewController.swift */,
 			);
 			path = Movies;
+			sourceTree = "<group>";
+		};
+		BCA73B62298E419F00A5F02B /* MovieDetails */ = {
+			isa = PBXGroup;
+			children = (
+				BCA73B63298E41CE00A5F02B /* GEMovieDetailsViewController.swift */,
+			);
+			path = MovieDetails;
+			sourceTree = "<group>";
+		};
+		BCA73B65298E424400A5F02B /* MoviesSeach */ = {
+			isa = PBXGroup;
+			children = (
+				BCA73B67298E426F00A5F02B /* GEMoviesSerachViewController.swift */,
+			);
+			path = MoviesSeach;
+			sourceTree = "<group>";
+		};
+		BCA73B6D298E4D0800A5F02B /* FavoritesMovies */ = {
+			isa = PBXGroup;
+			children = (
+				BCA73B6B298E4CFB00A5F02B /* GEFavoritesMoviesViewController.swift */,
+			);
+			path = FavoritesMovies;
 			sourceTree = "<group>";
 		};
 		CDA601547FB4A27C294F6FAC /* Frameworks */ = {
@@ -528,10 +561,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BCA73B68298E426F00A5F02B /* GEMoviesSerachViewController.swift in Sources */,
+				BCA73B6C298E4CFB00A5F02B /* GEFavoritesMoviesViewController.swift in Sources */,
 				BC96BC5F298E00B30003EDD5 /* GENowPlayingMoviesViewController.swift in Sources */,
 				BC96BC21298DF8530003EDD5 /* ViewController.swift in Sources */,
 				BC96BC61298E00D70003EDD5 /* GEPopularMoviesViewController.swift in Sources */,
 				BC96BC58298DFF670003EDD5 /* GEHomeTabBarView.swift in Sources */,
+				BCA73B64298E41CE00A5F02B /* GEMovieDetailsViewController.swift in Sources */,
 				BCA73B61298E20B300A5F02B /* GEMoviesBaseViewController.swift in Sources */,
 				BC96BC1D298DF8530003EDD5 /* AppDelegate.swift in Sources */,
 				BC96BC63298E00FB0003EDD5 /* GETopRatedMoviesViewController.swift in Sources */,
