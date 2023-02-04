@@ -13,10 +13,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        setupDatabaseContext()
         window?.rootViewController = createNavController(for: GEHomeTabBarView(), title: "My Movies")
         window?.makeKeyAndVisible()
         return true
     }
+    
     fileprivate func createNavController(for rootViewController: UIViewController,
                                          title: String) -> UIViewController {
            let navController = UINavigationController(rootViewController: rootViewController)
@@ -24,7 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
            navController.navigationBar.prefersLargeTitles = true
            rootViewController.navigationItem.title = title
            return navController
-       }
+    }
+    
+    func setupDatabaseContext() {
+        GEDatabaseWorker.shared.managedContext = persistentContainer.viewContext
+    }
 
     // MARK: - Core Data stack
 

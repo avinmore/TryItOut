@@ -7,9 +7,12 @@
 
 import UIKit
 class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
+    lazy var viewModel = GENowPlayingMoviesViewModel()
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.fetchGenreData()
         setupCollectionView(self)
+        viewModel.fetchData()
     }
 }
 
