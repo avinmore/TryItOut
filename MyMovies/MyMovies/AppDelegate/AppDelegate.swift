@@ -13,8 +13,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        window?.rootViewController = createNavController(for: GEHomeTabBarView(), title: "My Movies")
+        window?.makeKeyAndVisible()
         return true
     }
+    fileprivate func createNavController(for rootViewController: UIViewController,
+                                         title: String) -> UIViewController {
+           let navController = UINavigationController(rootViewController: rootViewController)
+           navController.tabBarItem.title = title
+           navController.navigationBar.prefersLargeTitles = true
+           rootViewController.navigationItem.title = title
+           return navController
+       }
 
     // MARK: - Core Data stack
 
