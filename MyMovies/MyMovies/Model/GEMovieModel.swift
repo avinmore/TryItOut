@@ -23,18 +23,18 @@ struct Dates: Codable {
 }
 
 struct GEMovie: Codable, Hashable {
-    let adult: Bool
-    let backdropPath: String
-    let genreIDS: [Int]
-    let genreList: String?
+    var adult: Bool = false
+    var backdropPath: String?
+    var genreIDS: [Int]?
+    var genreList: String?
     let id: Int
-    let originalLanguage: String
-    let originalTitle, overview: String
-    let popularity: Double
-    let posterPath, releaseDate, title: String
-    let video: Bool
-    let voteAverage: Double
-    let voteCount: Int
+    var originalLanguage: String?
+    var originalTitle, overview: String?
+    var popularity: Double?
+    var posterPath, releaseDate, title: String?
+    var video: Bool?
+    var voteAverage: Double?
+    var voteCount: Int?
 
     enum CodingKeys: String, CodingKey {
         case adult

@@ -17,21 +17,21 @@ class GEDatabaseWorker {
         genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
         for movie in movies.results {
             let manageObject = Movie(context: context)
-            manageObject.genre_ids = movie.genreIDS.data
+            manageObject.genre_ids = movie.genreIDS?.data
             manageObject.id = Int64(movie.id)
             manageObject.original_language = movie.originalLanguage
             manageObject.adult = movie.adult
             manageObject.original_title = movie.originalTitle
             manageObject.overview = movie.overview
-            manageObject.popularity = movie.popularity
+            manageObject.popularity = movie.popularity ?? 0
             manageObject.poster_path = movie.posterPath
             manageObject.release_date = movie.releaseDate
             manageObject.title = movie.title
-            manageObject.video = movie.video
-            manageObject.vote_average = movie.voteAverage
-            manageObject.vote_count = Int16(movie.voteCount)
-            manageObject.genre_list = movie.genreIDS.map { fetchGenreFor($0) }.joined(separator: " * ")
-            //debugPrint("### \(genres.count) : \(movie.title) : \(movie.genreIDS) :  \(manageObject.genre_list)")
+            manageObject.video = movie.video ?? false
+            manageObject.vote_average = movie.voteAverage ?? 0
+            manageObject.vote_count = Int16(movie.voteCount ?? 0)
+            manageObject.dateAdded = Date()
+            manageObject.genre_list = movie.genreIDS?.map { fetchGenreFor($0) }.joined(separator: " * ")
         }
         saveData(context)
     }

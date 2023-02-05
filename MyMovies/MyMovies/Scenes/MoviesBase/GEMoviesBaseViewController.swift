@@ -11,6 +11,7 @@ class GEMoviesBaseViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
     func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate & UICollectionViewDataSource) -> UICollectionView {
@@ -21,6 +22,15 @@ class GEMoviesBaseViewController: UIViewController {
         collectionView.delegate = controller
         collectionView.dataSource = controller
         controller.view.addSubview(collectionView)
+        // Add constraints
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: controller.view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: controller.view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: controller.view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: controller.view.bottomAnchor)
+        ])
+        
         return collectionView
     }
     

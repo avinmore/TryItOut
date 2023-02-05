@@ -34,6 +34,10 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        layer.cornerRadius = 5
+        clipsToBounds = true
+        
         moviewImageView.contentMode = .scaleToFill
         
         stackView.addArrangedSubview(moviewImageView)
@@ -85,23 +89,27 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         voteAvgIcon.image = UIImage(named: "movie-rating")
         voteAvgStack.addArrangedSubview(voteAvgIcon)
         voteAvgStack.addArrangedSubview(voteAvgLabel)
+        voteAvgIcon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        voteAvgLabel.widthAnchor.constraint(equalToConstant: 20).isActive = true
         
         voteCountStackView.axis = .horizontal
         voteCountStackView.alignment = .center
-        voteCountStackView.distribution = .fill
+        voteCountStackView.distribution = .equalCentering
         voteCountStackView.spacing = 0
         voteCountIcon.contentMode = .scaleAspectFit
         
         voteCountLabel.font = UIFont.systemFont(ofSize: 13)
         voteCountLabel.numberOfLines = 0
         voteCountLabel.adjustsFontSizeToFitWidth = true
+        voteCountLabel.minimumScaleFactor = 0.8
         voteCountLabel.textColor = .white
         voteCountIcon.image = UIImage(named: "vote-count")
         voteCountStackView.addArrangedSubview(voteCountIcon)
         voteCountStackView.addArrangedSubview(voteCountLabel)
-        
+        voteCountIcon.widthAnchor.constraint(equalToConstant: 30).isActive = true
+
         //bottom label config
-        genre.font = UIFont.boldSystemFont(ofSize: 10)
+        genre.font = UIFont.boldSystemFont(ofSize: 13)
         genre.numberOfLines = 0
         genre.textColor = .white
         genre.adjustsFontSizeToFitWidth = true
@@ -111,8 +119,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         release.textColor = .white
         release.minimumScaleFactor = 0.6
         release.textAlignment = .right
-        
-        
+
         /// Top and Bottom lables
         topStack.axis = .horizontal
         topStack.alignment = .leading
@@ -200,9 +207,9 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         addtopBottomBackgroundGradiant( .black.withAlphaComponent(0.5), color2: .clear )
         addBottomTopBackgroundGradiant(.clear, color2: .black.withAlphaComponent(0.5))
         loadImage(movie.posterPath)
-        voteAvgLabel.text = "\(movie.voteAverage)"
-        voteCountLabel.text = "\(movie.voteCount)"
-        release.text = formatDate(movie.releaseDate)
+        voteAvgLabel.text = "\(movie.voteAverage ?? 0)"
+        voteCountLabel.text = "\(movie.voteCount ?? 0)"
+        release.text = formatDate(movie.releaseDate ?? "")
         genre.text = movie.genreList
         title.text = movie.title
     }

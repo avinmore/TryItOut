@@ -15,21 +15,19 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
         viewModel.delegate = self
+        viewModel.setupDataSync()
         viewModel.fetchGenreData()
         viewModel.fetchData()
     }
 }
 
 extension GENowPlayingMoviesViewController: GENowPlayingMoviesViewModelProtocol {
-    func insertObjectAtIndex(_ index: IndexPath) {
-        collectionView.insertItems(at: [index])
-    }
     func updateUI() {
         collectionView.performBatchUpdates { [weak self] in
-            _ = self?.viewModel.blockOfOperation.map { operation in
-                operation.start()
-            }
+            guard let self = self else { return }
+            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
         } completion: { completed in
+            self.viewModel.updateIndexes.removeAll()
             debugPrint("")
         }
     }
@@ -46,9 +44,22 @@ extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollec
             return UICollectionViewCell()
         }
         cell.loadCellData(viewModel.movieForIndexPath(indexPath))
-        //cell.loadImage(viewModel.movieForIndexPath(indexPath)?.posterPath)
-        cell.backgroundColor = .random
+        //cell.backgroundColor = .random
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let totalItemCount = viewModel.numberOfItemInSections(indexPath.section)
+        if indexPath.row == totalItemCount - 5 {
+            if viewModel.currentPage < totalItemCount {
+                    viewModel.fetchData()
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = viewModel.movieForIndexPath(indexPath)
+        debugPrint("### \(movie?.id ?? 0)")
     }
 }
 

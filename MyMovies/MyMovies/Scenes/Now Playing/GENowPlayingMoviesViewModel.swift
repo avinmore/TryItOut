@@ -15,21 +15,30 @@ protocol GEFetchMovieData {
 }
 
 protocol GENowPlayingMoviesViewModelProtocol {
-    func insertObjectAtIndex(_ index: IndexPath)
+//    func insertObjectAtIndex(_ index: IndexPath)
     func updateUI()
 }
 
 class GENowPlayingMoviesViewModel: NSObject, GEFetchMovieData {
     private var pageIndex = 1
+    var currentPage = 0
+    var nextPage = 1
+    var totalPages = 0
     private var cancellables = Set<AnyCancellable>()
+    var blockOfOperation = [BlockOperation]()
+    var updateIndexes = [IndexPath]()
     var delegate: GENowPlayingMoviesViewModelProtocol?
     var movies: [GEMovie] = []
     func fetchData() {
-        setupDataSync()
-        GENetworkDataManager.shared.fetchDataRequest(.nowPlaying(pageIndex), responseType: Movies.self).sink { completion in
+        nextPage = currentPage + 1
+        debugPrint("### fetching page \(nextPage)")
+        GENetworkDataManager.shared.fetchDataRequest(.nowPlaying(nextPage),
+            responseType: Movies.self).sink { [weak self] completion in
             switch completion {
             case .finished:
-                print("Finish")
+                guard let self = self else { return }
+                self.currentPage = self.nextPage
+                debugPrint("### fetched page \(self.nextPage)")
             case .failure(let error):
                 print("failure \(error)")
             }
@@ -78,19 +87,16 @@ class GENowPlayingMoviesViewModel: NSObject, GEFetchMovieData {
         fetchResult.delegate = self
         return fetchResult
     }()
-    var blockOfOperation = [BlockOperation]()
+    
     
 }
 
 extension GENowPlayingMoviesViewModel: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         if type == .insert {
-            blockOfOperation.append(BlockOperation(block: { [weak self] in
-                if let index = newIndexPath {
-                    self?.delegate?.insertObjectAtIndex(index)
-                }
-            }) )
-            
+            if let index = newIndexPath {
+                updateIndexes.append(index)
+            }
         }
     }
     

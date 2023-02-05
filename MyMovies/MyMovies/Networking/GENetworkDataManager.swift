@@ -72,6 +72,7 @@ class GENetworkDataManager {
             let result = try decoder.decode(T.self, from: data)
             return result
         } catch {
+            debugPrint(error)
             return nil
         }
     }
