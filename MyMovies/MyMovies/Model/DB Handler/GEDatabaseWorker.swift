@@ -50,16 +50,16 @@ class GEDatabaseWorker {
         saveData(context)
     }
     
-    func fetchMovies() {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return }
-        let fetchMoviesRequest = Movie.fetchRequest()
-        do {
-            let movies = try context.fetch(fetchMoviesRequest)
-           
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-    }
+//    func fetchMovies() {
+//        guard let context = GEDatabaseWorker.shared.managedContext else { return }
+//        let fetchMoviesRequest = Movie.fetchRequest()
+//        do {
+//            let movies = try context.fetch(fetchMoviesRequest)
+//           
+//        } catch let error as NSError {
+////            print("Could not fetch. \(error), \(error.userInfo)")
+//        }
+//    }
     
     func fetchGenre() -> [Genre] {
         guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
@@ -68,7 +68,7 @@ class GEDatabaseWorker {
             let genres = try context.fetch(fetchGenreRequest)
             return genres
         } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
+//            print("Could not fetch. \(error), \(error.userInfo)")
             return []
         }
     }
@@ -78,9 +78,9 @@ class GEDatabaseWorker {
             try context.save()
         } catch let error as NSError {
             if error.domain == NSCocoaErrorDomain && error.code == 133021 {
-                print("## Duplicate detected")
+                //print("## Duplicate detected")
             }
-            print("Could not save. \(error), \(error.userInfo)")
+            //print("Could not save. \(error), \(error.userInfo)")
         }
     }
     

@@ -1,22 +1,19 @@
 //
-//  GENowPlayingMoviesViewModel.swift
+//  GETopRatedMoviesViewModel.swift
 //  MyMovies
 //
-//  Created by Avin on 4/2/23.
+//  Created by Avin on 5/2/23.
 //
-
 import Foundation
 import Combine
-import CoreData
-import SwiftUI
 
-class GENowPlayingMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
+class GETopRatedMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     private var cancellables = Set<AnyCancellable>()
     var currentPage = 0
     var nextPage = 1
     func fetchData() {
         nextPage = currentPage + 1
-        fetch(.nowPlaying(nextPage)).sink { completion in
+        fetch(.topRated(nextPage)).sink { completion in
             switch completion {
             case .finished:
                 self.currentPage = self.nextPage

@@ -7,20 +7,41 @@
 
 import UIKit
 class GEUpcomingMoviesViewController: GEMoviesBaseViewController {
+    lazy var viewModel = GEUpcomingMoviesViewModel()
+    var collectionView: UICollectionView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCollectionView(self)
+        collectionView = setupCollectionView(self)
+        viewModel.delegate = self
+        viewModel.setupDataSync()
+        viewModel.fetchData()
     }
 }
 extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return viewModel.numberOfItemInSections(section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath)
-        cell.backgroundColor = .random
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+            assertionFailure()
+            return UICollectionViewCell()
+        }
+        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
         return cell
+    }
+}
+
+extension GEUpcomingMoviesViewController: GERefreshEventProtocol {
+    func updateUI() {
+        collectionView.performBatchUpdates { [weak self] in
+            guard let self = self else { return }
+            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+        } completion: { completed in
+            self.viewModel.updateIndexes.removeAll()
+            debugPrint("")
+        }
     }
 }
 

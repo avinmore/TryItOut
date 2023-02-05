@@ -21,7 +21,7 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
     }
 }
 
-extension GENowPlayingMoviesViewController: GENowPlayingMoviesViewModelProtocol {
+extension GENowPlayingMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
         collectionView.performBatchUpdates { [weak self] in
             guard let self = self else { return }

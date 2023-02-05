@@ -35,12 +35,6 @@ class GEMoviesBaseViewController: UIViewController {
     }
     
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {
-        
-        //1 first big cell
-//        let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1),
-//                                                                             heightDimension: .fractionalHeight(1/3)))
-//        item.contentInsets = NSDirectionalEdgeInsets(top: 1, leading: 1, bottom: 1, trailing: 1)
-//
         //--------- Set 1 ---------//
         //2 second row half cell
         let group1Item1 = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2),
