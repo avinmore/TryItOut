@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Kingfisher
+
 class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
     lazy var viewModel = GENowPlayingMoviesViewModel()
     var collectionView: UICollectionView!
@@ -39,7 +41,11 @@ extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionViewCell", for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+            assertionFailure()
+            return UICollectionViewCell()
+        }
+        cell.loadImage(viewModel.movieForIndexPath(indexPath)?.posterPath)
         cell.backgroundColor = .random
         return cell
     }

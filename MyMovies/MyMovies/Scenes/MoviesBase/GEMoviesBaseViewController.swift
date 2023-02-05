@@ -16,7 +16,7 @@ class GEMoviesBaseViewController: UIViewController {
     func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate & UICollectionViewDataSource) -> UICollectionView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
         collectionView.backgroundColor = UIColor.white
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
+        collectionView.register(CGMovieCollectionViewCell.self, forCellWithReuseIdentifier: "CGMovieCollectionViewCell")
         collectionView.frame = controller.view.frame
         collectionView.delegate = controller
         collectionView.dataSource = controller
