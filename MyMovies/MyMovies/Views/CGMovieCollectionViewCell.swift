@@ -63,7 +63,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         
         voteAvgIcon.contentMode = .scaleAspectFit
         
-        voteAvgLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        voteAvgLabel.font = UIFont.systemFont(ofSize: 13)
         voteAvgLabel.numberOfLines = 0
         voteAvgLabel.textColor = .white
         voteAvgLabel.adjustsFontSizeToFitWidth = true
@@ -78,7 +78,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         voteCountStackView.spacing = 0
         voteCountIcon.contentMode = .scaleAspectFit
         
-        voteCountLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        voteCountLabel.font = UIFont.systemFont(ofSize: 13)
         voteCountLabel.numberOfLines = 0
         voteCountLabel.adjustsFontSizeToFitWidth = true
         voteCountLabel.textColor = .white
@@ -87,12 +87,12 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         voteCountStackView.addArrangedSubview(voteCountLabel)
         
         //bottom label config
-        genre.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        genre.font = UIFont.boldSystemFont(ofSize: 10)
         genre.numberOfLines = 0
         genre.textColor = .white
         genre.adjustsFontSizeToFitWidth = true
         
-        release.font = UIFont.preferredFont(forTextStyle: .footnote)
+        release.font = UIFont.systemFont(ofSize: 8)
         release.numberOfLines = 0
         release.textColor = .white
         release.minimumScaleFactor = 0.6
@@ -124,34 +124,57 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         addSubview(bottomStack)
         bottomStack.translatesAutoresizingMaskIntoConstraints = false
         bottomStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
-        bottomStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
-        bottomStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
+        bottomStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4).isActive = true
+        bottomStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -35).isActive = true
         bottomStack.heightAnchor.constraint(equalToConstant: 20).isActive = true
         //add gradients
         addtopBottomBackgroundGradiant( .black.withAlphaComponent(0.5), color2: .clear )
         addBottomTopBackgroundGradiant(.clear, color2: .black.withAlphaComponent(0.5))
     }
+    lazy var topStackBackgroundView: UIView = {
+        topStackBackgroundView = UIView(frame: bounds)
+        return topStackBackgroundView
+    }()
+    
+    lazy var bottomViewStackBackgroundView: UIView = {
+        bottomViewStackBackgroundView = UIView(frame: bounds)
+        return bottomViewStackBackgroundView
+    }()
+    
+    lazy var topCAGradientLayer: CAGradientLayer = {
+        topCAGradientLayer = CAGradientLayer()
+        return topCAGradientLayer
+    }()
+    
+    lazy var bottomCAGradientLayer: CAGradientLayer = {
+            bottomCAGradientLayer = CAGradientLayer()
+        return topCAGradientLayer
+    }()
+    
     
     func addtopBottomBackgroundGradiant(_ color1: UIColor, color2: UIColor, cornerRadius: CGFloat = 10) {
-            let backgroundView = UIView(frame: bounds)
-            backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            let gradientLayer = CAGradientLayer()
-            gradientLayer.frame = CGRect(x: 0, y: -8, width: frame.width, height: 50)
-            gradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
-            backgroundView.layer.insertSublayer(gradientLayer, at: 0)
-            backgroundView.layer.cornerRadius = cornerRadius
-            topStack.insertSubview(backgroundView, at: 0)
+        topStackBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        topCAGradientLayer.frame = CGRect(x: 0, y: -8, width: frame.width, height: 50)
+        topCAGradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
+        topStackBackgroundView.layer.insertSublayer(topCAGradientLayer, at: 0)
+        topStackBackgroundView.layer.cornerRadius = cornerRadius
+        topStack.insertSubview(topStackBackgroundView, at: 0)
     }
-    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        topCAGradientLayer.removeFromSuperlayer()
+        bottomCAGradientLayer.removeFromSuperlayer()
+        topStackBackgroundView.removeFromSuperview()
+        bottomViewStackBackgroundView.removeFromSuperview()
+        
+    }
     func addBottomTopBackgroundGradiant(_ color1: UIColor, color2: UIColor, cornerRadius: CGFloat = 10) {
-        let backgroundView = UIView(frame: bounds)
-        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: -8, y: -30, width: frame.width + 16, height: 50)
-        gradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
-        backgroundView.layer.insertSublayer(gradientLayer, at: 0)
-        backgroundView.layer.cornerRadius = cornerRadius
-        bottomStack.insertSubview(backgroundView, at: 0)
+        topStackBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        topCAGradientLayer.frame = CGRect(x: -8, y: -30, width: frame.width + 16, height: 56)
+        topCAGradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
+        topStackBackgroundView.layer.insertSublayer(topCAGradientLayer, at: 0)
+        topStackBackgroundView.layer.cornerRadius = cornerRadius
+        bottomStack.insertSubview(topStackBackgroundView, at: 0)
     }
     
     required init?(coder: NSCoder) {
@@ -162,11 +185,13 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         guard let movie = movie else {
             return
         }
+        addtopBottomBackgroundGradiant( .black.withAlphaComponent(0.5), color2: .clear )
+        addBottomTopBackgroundGradiant(.clear, color2: .black.withAlphaComponent(0.5))
         loadImage(movie.posterPath)
         voteAvgLabel.text = "\(movie.voteAverage)"
         voteCountLabel.text = "\(movie.voteCount)"
         release.text = formatDate(movie.releaseDate)
-        let genres = movie.genreIDS.map({ GEDatabaseManager.shared.fetchGenreFor($0) }).joined(separator: " ")
+        let genres = movie.genreIDS.map({ GEDatabaseManager.shared.fetchGenreFor($0) }).joined(separator: " • ")
         genre.text = genres
     }
     
