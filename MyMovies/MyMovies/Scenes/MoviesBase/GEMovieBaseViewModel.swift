@@ -21,6 +21,7 @@ class GEMovieBaseViewModel: NSObject {
     
     private var cancellablesObserver = Set<AnyCancellable>()
     var updateIndexes = [IndexPath]()
+    var deletedIndexes = [IndexPath]()
     var delegate: GERefreshEventProtocol?
     
     func fetch(_ type: GEAPIRequestType<Int, (String, Int)>) -> Future<Bool, Error> {
@@ -85,6 +86,11 @@ extension GEMovieBaseViewModel: NSFetchedResultsControllerDelegate {
         if type == .insert {
             if let index = newIndexPath {
                 updateIndexes.append(index)
+            }
+        }
+        if type == .delete {
+            if let index = newIndexPath {
+                deletedIndexes.append(index)
             }
         }
     }

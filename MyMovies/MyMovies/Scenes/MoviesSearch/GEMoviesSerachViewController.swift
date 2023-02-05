@@ -10,13 +10,32 @@ import UIKit
 class GEMoviesSerachViewController: GEMoviesBaseViewController {
     lazy var viewModel = GEMoviesSerachViewModel()
     var collectionView: UICollectionView!
+    lazy var searchController = UISearchController(searchResultsController: nil)
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
+        navigationItem.titleView = searchController.searchBar
+        //definesPresentationContext = true
+        self.searchController.hidesNavigationBarDuringPresentation = false
+
+        searchController.searchResultsUpdater = self
+
         viewModel.delegate = self
         viewModel.setupDataSync()
         viewModel.fetchData()
+    }
+}
+extension GEMoviesSerachViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        var searchString = searchController.searchBar.text
+        searchString = searchString?.trimmingCharacters(in: .whitespaces)
+        let filteredString = searchString?.replacingOccurrences(of: "[\\s.]{2,}", with: "", options: .regularExpression)
+        if filteredString != viewModel.movieName {
+            viewModel.movieName = filteredString ?? ""
+            print("### \(viewModel.movieName)")
+        }        
     }
 }
 extension GEMoviesSerachViewController: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -38,11 +57,15 @@ extension GEMoviesSerachViewController: GERefreshEventProtocol {
     func updateUI() {
         collectionView.performBatchUpdates { [weak self] in
             guard let self = self else { return }
+            self.collectionView.deleteItems(at: self.viewModel.deletedIndexes)
             self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-        } completion: { completed in
-            self.viewModel.updateIndexes.removeAll()
-            debugPrint("")
-        }
+          } completion: { completed in
+              if !completed {
+                  self.collectionView.reloadData()
+              }
+              self.viewModel.updateIndexes.removeAll()
+              debugPrint("")
+          }
     }
 }
 

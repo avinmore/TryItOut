@@ -10,11 +10,17 @@ class GEMoviesSerachViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     private var cancellables = Set<AnyCancellable>()
     var currentPage = 0
     var nextPage = 1
-    var movieName = "Avatar"
+    var movieName = "" {
+        didSet {
+            currentPage = 0
+            nextPage = 1
+            fetchData()
+        }
+    }
     func fetchData() {
+        guard !movieName.isEmpty else { return }
         nextPage = currentPage + 1
-        self.fetchMovieRequestController?.fetchRequest.predicate =
-        NSPredicate(format: "title == %@", self.movieName)
+        
         
         fetch(.query((movieName, nextPage))).sink { [weak self] completion in
             guard let self = self else { return }
@@ -23,6 +29,8 @@ class GEMoviesSerachViewModel: GEMovieBaseViewModel, GEFetchMovieData {
                 self.currentPage = self.nextPage
                 DispatchQueue.main.async {
                     do {
+                        self.fetchMovieRequestController?.fetchRequest.predicate =
+                        NSPredicate(format: "SELF.title BEGINSWITH[c] %@", self.movieName)
                         try self.fetchMovieRequestController?.performFetch()
                         self.delegate?.updateUI()
                     } catch {
