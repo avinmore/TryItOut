@@ -8,7 +8,7 @@ import Foundation
 struct Movies: Codable {
     let dates: Dates?
     let page: Int
-    let results: [Result]
+    let results: [CGMovie]
     let totalPages, totalResults: Int
 
     enum CodingKeys: String, CodingKey {
@@ -22,7 +22,7 @@ struct Dates: Codable {
     let maximum, minimum: String
 }
 
-struct Result: Codable {
+struct CGMovie: Codable, Hashable {
     let adult: Bool
     let backdropPath: String
     let genreIDS: [Int]
@@ -48,5 +48,24 @@ struct Result: Codable {
         case title, video
         case voteAverage = "vote_average"
         case voteCount = "vote_count"
+    }
+}
+//Move to other file
+extension Movie {
+    func toCGMovie() -> CGMovie {
+        return CGMovie(adult: self.adult,
+                       backdropPath: self.backdrop_path ?? "",
+                       genreIDS: self.genre_ids?.dataToInt ?? [],
+                       id: Int(self.id),
+                       originalLanguage: self.original_language ?? "",
+                       originalTitle: self.original_title ?? "",
+                       overview: self.overview ?? "",
+                       popularity: self.popularity,
+                       posterPath: self.poster_path ?? "",
+                       releaseDate: self.release_date ?? "",
+                       title: self.title ?? "",
+                       video: self.video,
+                       voteAverage: self.vote_average,
+                       voteCount: Int(self.vote_count))
     }
 }

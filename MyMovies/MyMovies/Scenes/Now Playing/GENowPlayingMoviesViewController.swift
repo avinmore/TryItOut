@@ -8,17 +8,34 @@
 import UIKit
 class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
     lazy var viewModel = GENowPlayingMoviesViewModel()
+    var collectionView: UICollectionView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView = setupCollectionView(self)
+        viewModel.delegate = self
         viewModel.fetchGenreData()
-        setupCollectionView(self)
         viewModel.fetchData()
+    }
+}
+
+extension GENowPlayingMoviesViewController: GENowPlayingMoviesViewModelProtocol {
+    func insertObjectAtIndex(_ index: IndexPath) {
+        collectionView.insertItems(at: [index])
+    }
+    func updateUI() {
+        collectionView.performBatchUpdates { [weak self] in
+            _ = self?.viewModel.blockOfOperation.map { operation in
+                operation.start()
+            }
+        } completion: { completed in
+            debugPrint("")
+        }
     }
 }
 
 extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return viewModel.numberOfItemInSections(section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

@@ -13,7 +13,7 @@ class GEMoviesBaseViewController: UIViewController {
         super.viewDidLoad()
     }
     
-    func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate & UICollectionViewDataSource) {
+    func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate & UICollectionViewDataSource) -> UICollectionView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
         collectionView.backgroundColor = UIColor.white
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "CollectionViewCell")
@@ -21,6 +21,7 @@ class GEMoviesBaseViewController: UIViewController {
         collectionView.delegate = controller
         collectionView.dataSource = controller
         controller.view.addSubview(collectionView)
+        return collectionView
     }
     
     func getCompositionalLayout() -> UICollectionViewCompositionalLayout {

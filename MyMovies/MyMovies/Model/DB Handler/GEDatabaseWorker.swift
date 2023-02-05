@@ -71,6 +71,9 @@ class GEDatabaseWorker {
         do {
             try context.save()
         } catch let error as NSError {
+            if error.domain == NSCocoaErrorDomain && error.code == 133021 {
+                print("## Duplicate detected")
+            }
             print("Could not save. \(error), \(error.userInfo)")
         }
     }

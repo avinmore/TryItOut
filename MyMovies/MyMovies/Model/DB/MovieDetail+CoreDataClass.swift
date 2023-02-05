@@ -2,7 +2,7 @@
 //  MovieDetail+CoreDataClass.swift
 //  
 //
-//  Created by Avin on 4/2/23.
+//  Created by Avin on 5/2/23.
 //
 //
 
