@@ -8,7 +8,7 @@ import Foundation
 struct Movies: Codable {
     let dates: Dates?
     let page: Int
-    let results: [CGMovie]
+    let results: [GEMovie]
     let totalPages, totalResults: Int
 
     enum CodingKeys: String, CodingKey {
@@ -22,7 +22,7 @@ struct Dates: Codable {
     let maximum, minimum: String
 }
 
-struct CGMovie: Codable, Hashable {
+struct GEMovie: Codable, Hashable {
     let adult: Bool
     let backdropPath: String
     let genreIDS: [Int]
@@ -52,8 +52,8 @@ struct CGMovie: Codable, Hashable {
 }
 //Move to other file
 extension Movie {
-    func toCGMovie() -> CGMovie {
-        return CGMovie(adult: self.adult,
+    func toCGMovie() -> GEMovie {
+        return GEMovie(adult: self.adult,
                        backdropPath: self.backdrop_path ?? "",
                        genreIDS: self.genre_ids?.dataToInt ?? [],
                        id: Int(self.id),

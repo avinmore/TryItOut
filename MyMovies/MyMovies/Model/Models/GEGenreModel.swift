@@ -15,3 +15,9 @@ struct Genres: Codable {
     let id: Int
     let name: String
 }
+
+extension Genre {
+    func toGenre() -> Genres {
+        return Genres(id: Int(self.id), name: self.name ?? "")
+    }
+}

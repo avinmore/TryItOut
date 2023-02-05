@@ -57,13 +57,15 @@ class GEDatabaseWorker {
         }
     }
     
-    func fetchGenre() {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return }
+    func fetchGenre() -> [Genre] {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
         let fetchGenreRequest = Genre.fetchRequest()
         do {
             let genres = try context.fetch(fetchGenreRequest)
+            return genres
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
+            return []
         }
     }
     

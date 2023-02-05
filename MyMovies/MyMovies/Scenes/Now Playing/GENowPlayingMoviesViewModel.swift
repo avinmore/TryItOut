@@ -23,7 +23,7 @@ class GENowPlayingMoviesViewModel: NSObject, GEFetchMovieData {
     private var pageIndex = 1
     private var cancellables = Set<AnyCancellable>()
     var delegate: GENowPlayingMoviesViewModelProtocol?
-    var movies: [CGMovie] = []
+    var movies: [GEMovie] = []
     func fetchData() {
         setupDataSync()
         GENetworkDataManager.shared.fetchDataRequest(.nowPlaying(pageIndex), responseType: Movies.self).sink { completion in
@@ -55,7 +55,7 @@ class GENowPlayingMoviesViewModel: NSObject, GEFetchMovieData {
         return fetchMovieRequestController?.sections?[section].numberOfObjects ?? 0
     }
     
-    func movieForIndexPath(_ indexPath: IndexPath) -> CGMovie? {
+    func movieForIndexPath(_ indexPath: IndexPath) -> GEMovie? {
         let movie = fetchMovieRequestController?.object(at: indexPath)
         return movie?.toCGMovie()
     }

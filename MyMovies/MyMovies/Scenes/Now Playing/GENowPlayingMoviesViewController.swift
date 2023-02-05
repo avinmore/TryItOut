@@ -45,7 +45,8 @@ extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollec
             assertionFailure()
             return UICollectionViewCell()
         }
-        cell.loadImage(viewModel.movieForIndexPath(indexPath)?.posterPath)
+        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
+        //cell.loadImage(viewModel.movieForIndexPath(indexPath)?.posterPath)
         cell.backgroundColor = .random
         return cell
     }
