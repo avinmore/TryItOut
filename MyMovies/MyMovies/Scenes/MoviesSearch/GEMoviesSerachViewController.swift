@@ -7,10 +7,42 @@
 
 import Foundation
 import UIKit
-class GEMoviesSerachViewController: UIViewController {
+class GEMoviesSerachViewController: GEMoviesBaseViewController {
+    lazy var viewModel = GEMoviesSerachViewModel()
+    var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        collectionView = setupCollectionView(self)
+        viewModel.delegate = self
+        viewModel.setupDataSync()
+        viewModel.fetchData()
     }
 }
+extension GEMoviesSerachViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return viewModel.numberOfItemInSections(section)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+            assertionFailure()
+            return UICollectionViewCell()
+        }
+        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
+        return cell
+    }
+}
+
+extension GEMoviesSerachViewController: GERefreshEventProtocol {
+    func updateUI() {
+        collectionView.performBatchUpdates { [weak self] in
+            guard let self = self else { return }
+            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+        } completion: { completed in
+            self.viewModel.updateIndexes.removeAll()
+            debugPrint("")
+        }
+    }
+}
+

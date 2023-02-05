@@ -45,6 +45,7 @@
 		BCA73BAB298FD3E700A5F02B /* GEPopularMoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BAA298FD3E700A5F02B /* GEPopularMoviesViewModel.swift */; };
 		BCA73BAD298FD44000A5F02B /* GETopRatedMoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BAC298FD44000A5F02B /* GETopRatedMoviesViewModel.swift */; };
 		BCA73BAF298FD44C00A5F02B /* GEUpcomingMoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BAE298FD44C00A5F02B /* GEUpcomingMoviesViewModel.swift */; };
+		BCA73BB1298FD98600A5F02B /* GEMoviesSerachViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BB0298FD98600A5F02B /* GEMoviesSerachViewModel.swift */; };
 		C23AC5AC33DF0DCA6FB92CFD /* Pods_MyMoviesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE90A0E01DFE58DC3044A673 /* Pods_MyMoviesTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -111,6 +112,7 @@
 		BCA73BAA298FD3E700A5F02B /* GEPopularMoviesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEPopularMoviesViewModel.swift; sourceTree = "<group>"; };
 		BCA73BAC298FD44000A5F02B /* GETopRatedMoviesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GETopRatedMoviesViewModel.swift; sourceTree = "<group>"; };
 		BCA73BAE298FD44C00A5F02B /* GEUpcomingMoviesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEUpcomingMoviesViewModel.swift; sourceTree = "<group>"; };
+		BCA73BB0298FD98600A5F02B /* GEMoviesSerachViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEMoviesSerachViewModel.swift; sourceTree = "<group>"; };
 		BD75B34E4581D07A0F481E90 /* Pods-MyMovies-MyMoviesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovies-MyMoviesUITests.release.xcconfig"; path = "Target Support Files/Pods-MyMovies-MyMoviesUITests/Pods-MyMovies-MyMoviesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C554D16B52A4A57DE5A49CAC /* Pods_MyMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4C2CB22DB0BA2A34E9318AC /* Pods-MyMovies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovies.debug.xcconfig"; path = "Target Support Files/Pods-MyMovies/Pods-MyMovies.debug.xcconfig"; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 			isa = PBXGroup;
 			children = (
 				BCA73B67298E426F00A5F02B /* GEMoviesSerachViewController.swift */,
+				BCA73BB0298FD98600A5F02B /* GEMoviesSerachViewModel.swift */,
 			);
 			path = MoviesSearch;
 			sourceTree = "<group>";
@@ -659,6 +662,7 @@
 				BCA73B79298E7FA000A5F02B /* GEGenreModel.swift in Sources */,
 				BCA73B77298E7DA000A5F02B /* GEDatabaseManager.swift in Sources */,
 				BC96BC65298E01200003EDD5 /* GEUpcomingMoviesViewController.swift in Sources */,
+				BCA73BB1298FD98600A5F02B /* GEMoviesSerachViewModel.swift in Sources */,
 				BCA73B7D298E989E00A5F02B /* GEDatabaseWorker.swift in Sources */,
 				BCA73BAF298FD44C00A5F02B /* GEUpcomingMoviesViewModel.swift in Sources */,
 			);
