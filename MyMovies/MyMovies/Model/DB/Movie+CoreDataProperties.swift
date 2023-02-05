@@ -31,5 +31,6 @@ extension Movie {
     @NSManaged public var vote_count: Int16
     @NSManaged public var backdrop_path: String?
     @NSManaged public var dateAdded: Date?
+    @NSManaged public var genre_list: String?
 
 }

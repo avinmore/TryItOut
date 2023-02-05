@@ -11,10 +11,10 @@ class GEDatabaseWorker {
     static let shared = GEDatabaseWorker()
     private init() {}
     var managedContext: NSManagedObjectContext?
-    
+    private var genres: [Genres] = []
     func saveMovies(_ movies: Movies) {
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
-        
+        genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
         for movie in movies.results {
             let manageObject = Movie(context: context)
             manageObject.genre_ids = movie.genreIDS.data
@@ -30,11 +30,15 @@ class GEDatabaseWorker {
             manageObject.video = movie.video
             manageObject.vote_average = movie.voteAverage
             manageObject.vote_count = Int16(movie.voteCount)
+            manageObject.genre_list = movie.genreIDS.map { fetchGenreFor($0) }.joined(separator: " * ")
+            //debugPrint("### \(genres.count) : \(movie.title) : \(movie.genreIDS) :  \(manageObject.genre_list)")
         }
         saveData(context)
     }
     
-    
+    func fetchGenreFor(_ id: Int) -> String {
+        return genres.first(where: { $0.id == id })?.name ?? ""
+    }
     
     func saveGenre(_ genres: GEGenreModel) {
         guard let context = GEDatabaseWorker.shared.managedContext else { return }

@@ -49,10 +49,24 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         stackView.contentMode = .scaleAspectFill
         
         //Bottom title view
-        titleView.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        titleView.backgroundColor = .white
+        titleView.backgroundColor = .black
         stackView.addArrangedSubview(titleView)
         
+//        titleView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+//        titleView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+//        titleView.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
+        titleView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        title.font = UIFont.boldSystemFont(ofSize: 14)
+        title.numberOfLines = 2
+        title.textColor = .white
+        title.adjustsFontSizeToFitWidth = true
+        title.lineBreakMode = .byWordWrapping
+        titleView.addArrangedSubview(title)
+        title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+        title.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+        title.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+
         
         
         //Top label config
@@ -97,7 +111,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         release.textColor = .white
         release.minimumScaleFactor = 0.6
         release.textAlignment = .right
-
+        
         
         /// Top and Bottom lables
         topStack.axis = .horizontal
@@ -106,9 +120,10 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         topStack.spacing = 8
         
         bottomStack.axis = .horizontal
-        bottomStack.alignment = .leading
         bottomStack.distribution = .fillProportionally
         bottomStack.spacing = 8
+        bottomStack.alignment = .bottom
+
         
         topStack.addArrangedSubview(voteAvgStack)
         topStack.addArrangedSubview(voteCountStackView)
@@ -117,7 +132,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         topStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
         topStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
         topStack.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
-        topStack.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        topStack.heightAnchor.constraint(equalToConstant: 15).isActive = true
         
         bottomStack.addArrangedSubview(genre)
         bottomStack.addArrangedSubview(release)
@@ -141,40 +156,37 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         return bottomViewStackBackgroundView
     }()
     
-    lazy var topCAGradientLayer: CAGradientLayer = {
-        topCAGradientLayer = CAGradientLayer()
-        return topCAGradientLayer
-    }()
-    
-    lazy var bottomCAGradientLayer: CAGradientLayer = {
-            bottomCAGradientLayer = CAGradientLayer()
-        return topCAGradientLayer
-    }()
-    
+    var topCAGradientLayer: CAGradientLayer?
+    var bottomCAGradientLayer: CAGradientLayer?
     
     func addtopBottomBackgroundGradiant(_ color1: UIColor, color2: UIColor, cornerRadius: CGFloat = 10) {
-        topStackBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        topCAGradientLayer.frame = CGRect(x: 0, y: -8, width: frame.width, height: 50)
-        topCAGradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
-        topStackBackgroundView.layer.insertSublayer(topCAGradientLayer, at: 0)
-        topStackBackgroundView.layer.cornerRadius = cornerRadius
-        topStack.insertSubview(topStackBackgroundView, at: 0)
-    }
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        topCAGradientLayer.removeFromSuperlayer()
-        bottomCAGradientLayer.removeFromSuperlayer()
-        topStackBackgroundView.removeFromSuperview()
-        bottomViewStackBackgroundView.removeFromSuperview()
-        
+        guard topCAGradientLayer == nil else {
+            topCAGradientLayer?.frame = CGRect(x: 0, y: -8, width: frame.width, height: 50)
+            return
+        }
+        let backgroundView = UIView(frame: bounds)
+        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: 0, y: -8, width: frame.width, height: 50)
+        gradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
+        backgroundView.layer.insertSublayer(gradientLayer, at: 0)
+        backgroundView.layer.cornerRadius = cornerRadius
+        topStack.insertSubview(backgroundView, at: 0)
+        topCAGradientLayer = gradientLayer
     }
     func addBottomTopBackgroundGradiant(_ color1: UIColor, color2: UIColor, cornerRadius: CGFloat = 10) {
+        guard bottomCAGradientLayer == nil else {
+            bottomCAGradientLayer?.frame =  CGRect(x: -8, y: -30, width: frame.width + 16, height: 56)
+            return
+        }
+        let gradientLayer = CAGradientLayer()
         topStackBackgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        topCAGradientLayer.frame = CGRect(x: -8, y: -30, width: frame.width + 16, height: 56)
-        topCAGradientLayer.colors = [color1.cgColor, color1.cgColor, color2.cgColor, color2.cgColor]
-        topStackBackgroundView.layer.insertSublayer(topCAGradientLayer, at: 0)
+        gradientLayer.frame = CGRect(x: -8, y: -30, width: frame.width + 16, height: 56)
+        gradientLayer.colors = [color1.cgColor, color2.cgColor, color2.cgColor, color2.cgColor]
+        topStackBackgroundView.layer.insertSublayer(gradientLayer, at: 0)
         topStackBackgroundView.layer.cornerRadius = cornerRadius
         bottomStack.insertSubview(topStackBackgroundView, at: 0)
+        bottomCAGradientLayer = gradientLayer
     }
     
     required init?(coder: NSCoder) {
@@ -191,8 +203,8 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         voteAvgLabel.text = "\(movie.voteAverage)"
         voteCountLabel.text = "\(movie.voteCount)"
         release.text = formatDate(movie.releaseDate)
-        let genres = movie.genreIDS.map({ GEDatabaseManager.shared.fetchGenreFor($0) }).joined(separator: " • ")
-        genre.text = genres
+        genre.text = movie.genreList
+        title.text = movie.title
     }
     
     func formatDate(_ stringDate: String) -> String {

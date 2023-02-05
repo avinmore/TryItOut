@@ -26,6 +26,7 @@ struct GEMovie: Codable, Hashable {
     let adult: Bool
     let backdropPath: String
     let genreIDS: [Int]
+    let genreList: String?
     let id: Int
     let originalLanguage: String
     let originalTitle, overview: String
@@ -39,6 +40,7 @@ struct GEMovie: Codable, Hashable {
         case adult
         case backdropPath = "backdrop_path"
         case genreIDS = "genre_ids"
+        case genreList = "genre_list"
         case id
         case originalLanguage = "original_language"
         case originalTitle = "original_title"
@@ -56,6 +58,7 @@ extension Movie {
         return GEMovie(adult: self.adult,
                        backdropPath: self.backdrop_path ?? "",
                        genreIDS: self.genre_ids?.dataToInt ?? [],
+                       genreList: self.genre_list,
                        id: Int(self.id),
                        originalLanguage: self.original_language ?? "",
                        originalTitle: self.original_title ?? "",
