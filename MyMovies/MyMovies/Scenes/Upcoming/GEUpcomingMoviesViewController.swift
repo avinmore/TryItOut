@@ -33,7 +33,10 @@ extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollecti
             assertionFailure()
             return UICollectionViewCell()
         }
+        
         cell.loadCellData(viewModel.movieForIndexPath(indexPath))
+        let movie = viewModel.movieForIndexPath(indexPath)
+        debugPrint("### \(movie?.is_upcoming)")
         return cell
     }
     
@@ -45,15 +48,15 @@ extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollecti
 
 extension GEUpcomingMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.reloadData()
-        return
-//        collectionView.performBatchUpdates { [weak self] in
-//            guard let self = self else { return }
-//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-//        } completion: { completed in
-//            self.viewModel.updateIndexes.removeAll()
-//            debugPrint("")
-//        }
+    //        collectionView.reloadData()
+    //        return
+        collectionView.performBatchUpdates { [weak self] in
+            guard let self = self else { return }
+            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+        } completion: { completed in
+            self.viewModel.updateIndexes.removeAll()
+            debugPrint("")
+        }
     }
 }
 

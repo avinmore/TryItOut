@@ -28,15 +28,15 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
 
 extension GENowPlayingMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.reloadData()
-        return
-//        collectionView.performBatchUpdates { [weak self] in
-//            guard let self = self else { return }
-//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-//        } completion: { completed in
-//            self.viewModel.updateIndexes.removeAll()
-//            debugPrint("")
-//        }
+//        collectionView.reloadData()
+//        return
+        collectionView.performBatchUpdates { [weak self] in
+            guard let self = self else { return }
+            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+        } completion: { completed in
+            self.viewModel.updateIndexes.removeAll()
+            debugPrint("")
+        }
     }
 }
 
@@ -50,8 +50,9 @@ extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollec
             assertionFailure()
             return UICollectionViewCell()
         }
-        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
-        //cell.backgroundColor = .random
+        let movie = viewModel.movieForIndexPath(indexPath)
+        //debugPrint("### \(movie?.is_popular)")
+        cell.loadCellData(movie)
         return cell
     }
     

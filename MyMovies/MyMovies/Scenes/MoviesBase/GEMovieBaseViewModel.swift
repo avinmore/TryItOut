@@ -32,6 +32,7 @@ class GEMovieBaseViewModel: NSObject {
     var delegate: GERefreshEventProtocol?
     
     func fetch<T: Codable>(_ type: GEAPIRequestType<Int, (String, Int)>, _ responseType: T.Type) -> Future<Bool, Error> {
+//        clearCache()
         return Future { [weak self] promis in
             guard let self = self else { return }
             GENetworkDataManager.shared.fetchDataRequest(type,
@@ -59,6 +60,18 @@ class GEMovieBaseViewModel: NSObject {
         }.store(in: &cancellablesObserver)
     }
 
+    
+//    func clearCache() {
+//        fetchMovieRequestController?.fetchRequest.predicate = nil
+//        fetchMovieRequestController?.fetchRequest.sortDescriptors = nil
+//        // Perform new fetch
+//        do {
+//            try fetchMovieRequestController?.performFetch()
+//        } catch {
+//            print(error)
+//        }
+//    }
+    
     func numberOfItemInSections(_ section: Int) -> Int {
         return fetchMovieRequestController?.sections?[section].numberOfObjects ?? 0
     }
@@ -67,6 +80,18 @@ class GEMovieBaseViewModel: NSObject {
         let movie = fetchMovieRequestController?.object(at: indexPath)
         return movie?.toCGMovie()
     }
+    /////////
+    func pupularNumberOfItemInSections(_ section: Int) -> Int {
+        return fetchPopularMovieRequestController?.sections?[section].numberOfObjects ?? 0
+    }
+    
+    func popularMovieForIndexPath(_ indexPath: IndexPath) -> GEMovie? {
+        let movie = fetchPopularMovieRequestController?.object(at: indexPath)
+        return movie?.toCGMovie()
+    }
+    //////
+    
+    
     
     func numberOfItemInMovieDetailsSections(_ section: Int) -> Int {
         return fetchMovieDetailsRequestController?.sections?[section].numberOfObjects ?? 0
@@ -81,6 +106,7 @@ class GEMovieBaseViewModel: NSObject {
     func setupDataSync() {
         do {
             try fetchMovieRequestController?.performFetch()
+            try fetchPopularMovieRequestController?.performFetch()
         } catch {
             print("error \(error)")
         }
@@ -95,6 +121,18 @@ class GEMovieBaseViewModel: NSObject {
         fetchResult.delegate = self
         return fetchResult
     }()
+    
+    lazy var fetchPopularMovieRequestController: NSFetchedResultsController<Movie>? = {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return nil }
+        let fetchRequest = Movie.fetchRequest()
+        let sortDescripters = [NSSortDescriptor(key: "dateAdded", ascending: true)]
+        fetchRequest.sortDescriptors = sortDescripters
+        let fetchResult = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResult.delegate = self
+        return fetchResult
+    }()
+    
+    
     
     func setupMovieDetailDataSync() {
         do {
@@ -132,28 +170,31 @@ extension GEMovieBaseViewModel: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
-        debugPrint("#### \(GEMovieBaseViewModel.currentCategory.rawValue)")
-        switch GEMovieBaseViewModel.currentCategory {
-        case .now_playing:
-            self.fetchMovieRequestController?.fetchRequest.predicate =
-            NSPredicate(format: "SELF.is_now_playing = 1")
-        case .popular:
-            self.fetchMovieRequestController?.fetchRequest.predicate =
-            NSPredicate(format: "SELF.is_popular = 1")
-            
-        case .top_rated:
-            self.fetchMovieRequestController?.fetchRequest.predicate =
-            NSPredicate(format: "SELF.is_top_rated = 1")
-            
-        case .upcoming:
-            self.fetchMovieRequestController?.fetchRequest.predicate =
-            NSPredicate(format: "SELF.is_upcoming = 1")
-        case .none:
-            break
-        }
-        self.fetchMovieRequestController?.fetchRequest.predicate =
-        NSPredicate(format: "SELF.is_now_playing = 1")
-        try? self.fetchMovieRequestController?.performFetch()
+//        debugPrint("#### \(GEMovieBaseViewModel.currentCategory.rawValue)")
+//        switch GEMovieBaseViewModel.currentCategory {
+//        case .now_playing:
+//            self.fetchMovieRequestController?.fetchRequest.predicate =
+//            NSPredicate(format: "SELF.is_now_playing = true")
+//            try? self.fetchMovieRequestController?.performFetch()
+//        case .popular:
+//            self.fetchPopularMovieRequestController?.fetchRequest.predicate =
+//            NSPredicate(format: "SELF.is_popular = true")
+//            try? self.fetchPopularMovieRequestController?.performFetch()
+//
+//        case .top_rated:
+//            self.fetchMovieRequestController?.fetchRequest.predicate =
+//            NSPredicate(format: "SELF.is_top_rated = true")
+//
+//        case .upcoming:
+//            self.fetchMovieRequestController?.fetchRequest.predicate =
+//            NSPredicate(format: "SELF.is_upcoming = true")
+//        case .none:
+//            break
+//        }
+        
+//        self.fetchMovieRequestController?.fetchRequest.predicate =
+//        NSPredicate(format: "SELF.is_now_playing = 1")
+        
         delegate?.updateUI()
     }
 }

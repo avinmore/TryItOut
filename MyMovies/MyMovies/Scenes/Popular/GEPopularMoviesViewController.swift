@@ -7,7 +7,7 @@
 
 import UIKit
 class GEPopularMoviesViewController: GEMoviesBaseViewController {
-    lazy var viewModel = GENowPlayingMoviesViewModel()
+    lazy var viewModel = GEPopularMoviesViewModel()
     var collectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -26,7 +26,7 @@ class GEPopularMoviesViewController: GEMoviesBaseViewController {
 
 extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.numberOfItemInSections(section)
+        return viewModel.pupularNumberOfItemInSections(section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -34,7 +34,10 @@ extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectio
             assertionFailure()
             return UICollectionViewCell()
         }
-        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
+        
+        cell.loadCellData(viewModel.popularMovieForIndexPath(indexPath))
+        let movie = viewModel.popularMovieForIndexPath(indexPath)
+        debugPrint("### \(movie?.is_popular)")
         return cell
     }
     
@@ -47,14 +50,14 @@ extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectio
 
 extension GEPopularMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.reloadData()
-        return
-//        collectionView.performBatchUpdates { [weak self] in
-//            guard let self = self else { return }
-//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-//        } completion: { completed in
-//            self.viewModel.updateIndexes.removeAll()
-//            debugPrint("")
-//        }
+//          collectionView.reloadData()
+//        return
+        collectionView.performBatchUpdates { [weak self] in
+            guard let self = self else { return }
+            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+        } completion: { completed in
+            self.viewModel.updateIndexes.removeAll()
+            debugPrint("")
+        }
     }
 }

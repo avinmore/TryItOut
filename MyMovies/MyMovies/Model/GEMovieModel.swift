@@ -35,7 +35,11 @@ struct GEMovie: Codable, Hashable {
     var video: Bool?
     var voteAverage: Double?
     var voteCount: Int?
-
+    var is_now_playing: Bool = false
+    var is_popular: Bool = false
+    var is_top_rated: Bool = false
+    var is_upcoming: Bool = false
+    
     enum CodingKeys: String, CodingKey {
         case adult
         case backdropPath = "backdrop_path"
@@ -69,6 +73,10 @@ extension Movie {
                        title: self.title ?? "",
                        video: self.video,
                        voteAverage: self.vote_average,
-                       voteCount: Int(self.vote_count))
+                       voteCount: Int(self.vote_count),
+                       is_now_playing: self.is_now_playing,
+                       is_popular: self.is_popular,
+                       is_top_rated: self.is_top_rated,
+                       is_upcoming: self.is_upcoming)
     }
 }

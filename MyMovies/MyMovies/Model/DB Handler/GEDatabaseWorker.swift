@@ -19,23 +19,26 @@ class GEDatabaseWorker {
     private init() {}
     var managedContext: NSManagedObjectContext?
     private var genres: [Genres] = []
+
     func saveMovies(_ movies: Movies, category: String) {
+        
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
         genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
         for movie in movies.results {
             let fetchMoviesRequest = Movie.fetchRequest()
             fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
-            do {
-                if let existing = try? context.fetch(fetchMoviesRequest), let existingObject = existing.first {
-                    existingObject.is_popular = category == MovieCategoryType.popular.rawValue
-                    existingObject.is_upcoming = category == MovieCategoryType.upcoming.rawValue
-                    existingObject.is_top_rated = category == MovieCategoryType.top_rated.rawValue
-                    existingObject.is_now_playing = category == MovieCategoryType.now_playing.rawValue
-                    existingObject.dateAdded = Date()
-                    //saveData(context)
-                    continue
-                }
-            } catch {}
+//            do {
+//                if let existing = try? context.fetch(fetchMoviesRequest),
+//                    let existingObject = existing.first {
+//                    existingObject.is_popular = category == MovieCategoryType.popular.rawValue
+//                    existingObject.is_upcoming = category == MovieCategoryType.upcoming.rawValue
+//                    existingObject.is_top_rated = category == MovieCategoryType.top_rated.rawValue
+//                    existingObject.is_now_playing = category == MovieCategoryType.now_playing.rawValue
+//                    existingObject.dateAdded = Date()
+//                    saveData(context)
+//                    continue
+//                }
+//            } catch {}
             
             let manageObject = Movie(context: context)
             manageObject.genre_ids = movie.genreIDS?.data
@@ -61,8 +64,9 @@ class GEDatabaseWorker {
             let moviecategory = MovieCategory(context: context)
             moviecategory.id = Int64(movie.id)
             moviecategory.type = category
+            saveData(context)
         }
-        saveData(context)
+        
     }
     
     func fetchGenreFor(_ id: Int) -> String {
@@ -120,7 +124,7 @@ class GEDatabaseWorker {
                 if let existing = try? context.fetch(fetchMoviesRequest), let existingObject = existing.first {
                     existingObject.id = Int64(genre.id)
                     existingObject.name = genre.name
-                    //saveData(context)
+                    saveData(context)
                     continue
                 }
             } catch {}
@@ -128,8 +132,8 @@ class GEDatabaseWorker {
             let manageObject = Genre(context: context)
             manageObject.id = Int64(genre.id)
             manageObject.name = genre.name
+            saveData(context)
         }
-        saveData(context)
     }
     
     func updateFavoriteStatus(_ id: Int) -> FavoriteStatus  {
