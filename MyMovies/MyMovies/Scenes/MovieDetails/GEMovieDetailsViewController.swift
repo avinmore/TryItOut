@@ -13,23 +13,27 @@ class GEMovieDetailsViewController: GEMoviesBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
-        viewModel.setupDataSync()
+        viewModel.setupMovieDetailDataSync()
         let header = GEMoviePosterHeader(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width * 0.5))
-        header.imageView.kf.setImage(with: URL(string: "https://image.tmdb.org/t/p/original/faXT8V80JRhnArTAeYXz0Eutpv9.jpg"))
         tableView.tableHeaderView = header
     }
 }
 
 extension GEMovieDetailsViewController: UITableViewDataSource, UIScrollViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return viewModel.numberOfItemInMovieDetailsSections(section)
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GEMovieInfoCell", for: indexPath) as? GEMovieInfoCell else {
             assertionFailure()
             return GEMovieInfoCell()
         }
-        cell.backgroundColor = .random
+        let movieDetails = viewModel.movieDetailsForIndexPath(indexPath)
+        if let header = tableView.tableHeaderView as? GEMoviePosterHeader {
+            header.loadPosterImage(movieDetails?.posterPath)
+            header.loadBackdropImage(movieDetails?.backdropPath)
+        }
+        cell.loadCelldata(movieDetails)
         return cell
     }
     

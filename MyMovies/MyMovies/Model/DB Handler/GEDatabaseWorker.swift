@@ -60,7 +60,7 @@ class GEDatabaseWorker {
         manageObject.adult = movieDetail.adult ?? true
         manageObject.backdrop_path = movieDetail.backdropPath
         manageObject.budget = Int64(movieDetail.budget ?? 0)
-        manageObject.genres = movieDetail.genres?.data
+        manageObject.genres = try? JSONEncoder().encode(movieDetail.genres)
         manageObject.homepage = movieDetail.homepage
         manageObject.id = Int64(movieDetail.id ?? 0)
         manageObject.imdb_id = movieDetail.imdbID
@@ -72,7 +72,7 @@ class GEDatabaseWorker {
         manageObject.release_date = movieDetail.releaseDate
         manageObject.revenue = Int64(movieDetail.revenue ?? 0)
         manageObject.runtime = Int64(movieDetail.runtime ?? 0)
-        //manageObject.spoken_languages = movieDetail.spoken_languages
+        manageObject.spoken_languages = try? JSONEncoder().encode(movieDetail.spokenLanguages)
         manageObject.status = movieDetail.status
         manageObject.tagline = movieDetail.tagline
         manageObject.title = movieDetail.title

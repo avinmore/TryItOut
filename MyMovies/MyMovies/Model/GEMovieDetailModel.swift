@@ -94,3 +94,32 @@ struct SpokenLanguage: Codable {
         case name
     }
 }
+
+extension MovieDetail {
+    func toGEMovieDetailModel() -> GEMovieDetailModel {
+        return GEMovieDetailModel(
+            backdropPath: self.backdrop_path ,
+            belongsToCollection: nil ,
+            budget: Int(self.budget) ,
+            genres: try? JSONDecoder().decode([Genres].self, from: self.genres ?? Data()),
+            homepage: self.homepage ,
+            id: Int(self.id),
+            imdbID: self.imdb_id ,
+            originalLanguage: self.original_language ,
+            originalTitle: self.original_title ,
+            overview: self.overview ,
+            popularity: self.popularity ,
+            posterPath: self.poster_path ,
+            productionCompanies: nil ,
+            productionCountries: nil ,
+            releaseDate: self.release_date ,
+            revenue: Int(self.revenue),
+            runtime: Int(self.runtime),
+            spokenLanguages: try? JSONDecoder().decode([SpokenLanguage].self, from: self.spoken_languages ?? Data()),
+            status: self.status ,
+            tagline: self.tagline ,
+            title: self.title ,
+            voteAverage: self.vote_average,
+            voteCount: Int(self.vote_average))
+    }
+}

@@ -60,6 +60,15 @@ class GEMovieBaseViewModel: NSObject {
         let movie = fetchMovieRequestController?.object(at: indexPath)
         return movie?.toCGMovie()
     }
+    
+    func numberOfItemInMovieDetailsSections(_ section: Int) -> Int {
+        return fetchMovieDetailsRequestController?.sections?[section].numberOfObjects ?? 0
+    }
+    
+    func movieDetailsForIndexPath(_ indexPath: IndexPath) -> GEMovieDetailModel? {
+        let movie = fetchMovieDetailsRequestController?.object(at: indexPath)
+        return movie?.toGEMovieDetailModel()
+    }
         
     //Database
     func setupDataSync() {
@@ -91,7 +100,7 @@ class GEMovieBaseViewModel: NSObject {
     lazy var fetchMovieDetailsRequestController: NSFetchedResultsController<MovieDetail>? = {
         guard let context = GEDatabaseWorker.shared.managedContext else { return nil }
         let fetchRequest = MovieDetail.fetchRequest()
-        let sortDescripters = [NSSortDescriptor(key: "id != nil", ascending: true)]
+        let sortDescripters = [NSSortDescriptor(key: "id", ascending: true)]
         fetchRequest.sortDescriptors = sortDescripters
         let fetchResult = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
         fetchResult.delegate = self
