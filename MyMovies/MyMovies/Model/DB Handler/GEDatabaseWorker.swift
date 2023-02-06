@@ -23,7 +23,13 @@ class GEDatabaseWorker {
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
         genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
         for movie in movies.results {
-            let manageObject = Movie(context: context)
+            var manageObject = Movie(context: context)
+            //check exists
+            let fetchMoviesRequest = Movie.fetchRequest()
+            fetchMoviesRequest.predicate = NSPredicate(format: "id == \(Int64(movie.id))")
+            if let movies = try? context.fetch(fetchMoviesRequest), let existingMovie = movies.first {
+                manageObject = existingMovie
+            }
             manageObject.genre_ids = movie.genreIDS?.data
             manageObject.id = Int64(movie.id)
             manageObject.original_language = movie.originalLanguage
@@ -58,7 +64,7 @@ class GEDatabaseWorker {
                 if let movieDet = movies.first {
                     manageObject = movieDet
                 }
-            } catch let error as NSError {
+            } catch {
                 // print("Could not fetch. \(error), \(error.userInfo)")
             }
             
@@ -113,12 +119,39 @@ class GEDatabaseWorker {
                 manageObject.id = Int64(id)
                 status = .favorite
             }
-        } catch let error as NSError {
+        } catch  {
             // print("Could not fetch. \(error), \(error.userInfo)")
         }
         saveData(context)
         return status
     }
+    
+    func fetchAllfavoritesMovies() -> [Movie] {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
+        let fetchMoviesRequest = FavoriteMovies.fetchRequest()
+        do {
+            let allfavoriteMovieIds = try context.fetch(fetchMoviesRequest)
+            return fetchfavoriteMovies( allfavoriteMovieIds.map({ Int($0.id) }))
+        } catch  {
+            // print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return  []
+    }
+    
+    func fetchfavoriteMovies(_ ids: [Int]) -> [Movie] {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
+        let fetchMoviesRequest = Movie.fetchRequest()
+        let predicate = NSPredicate(format: "id IN %@", ids)
+        fetchMoviesRequest.predicate = predicate
+        do {
+            let movies = try context.fetch(fetchMoviesRequest)
+            return movies
+        } catch {
+            // print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return  []
+    }
+    
     
 //    func fetchMovies() {
 //        guard let context = GEDatabaseWorker.shared.managedContext else { return }

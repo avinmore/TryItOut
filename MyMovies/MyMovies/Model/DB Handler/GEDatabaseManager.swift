@@ -27,4 +27,8 @@ class GEDatabaseManager {
     func updateFavoriteStatus(_ id: Int) -> FavoriteStatus {
         GEDatabaseWorker.shared.updateFavoriteStatus(id)
     }
+    
+    func fetchAllfavoritesMovies() -> [GEMovie] {
+        return GEDatabaseWorker.shared.fetchAllfavoritesMovies().map({ $0.toCGMovie() })
+    }
 }
