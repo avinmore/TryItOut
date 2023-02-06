@@ -22,8 +22,8 @@ class GEMovieDetailsViewModel: GEMovieBaseViewModel, GEFetchMovieData {
             case .finished:
                 
                 DispatchQueue.main.async {
-                    self.fetchMovieRequestController?.fetchRequest.predicate = NSPredicate(format: "id == %d", movieId)
-                    try? self.fetchMovieRequestController?.performFetch()
+                    self.fetchMovieDetailsRequestController?.fetchRequest.predicate = NSPredicate(format: "id == %d", movieId)
+                    try? self.fetchMovieDetailsRequestController?.performFetch()
                     self.delegate?.updateUI()
                 }
                 print("finished")

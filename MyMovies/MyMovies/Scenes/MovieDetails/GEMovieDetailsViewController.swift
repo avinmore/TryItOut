@@ -16,6 +16,7 @@ class GEMovieDetailsViewController: GEMoviesBaseViewController {
         viewModel.setupMovieDetailDataSync()
         let header = GEMoviePosterHeader(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width * 0.5))
         tableView.tableHeaderView = header
+        tableView.backgroundColor = .black
     }
 }
 
