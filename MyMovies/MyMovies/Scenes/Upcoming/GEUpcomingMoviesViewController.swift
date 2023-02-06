@@ -14,6 +14,11 @@ class GEUpcomingMoviesViewController: GEMoviesBaseViewController {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
         viewModel.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        GEMovieBaseViewModel.currentCategory = MovieCategoryType.upcoming
         viewModel.setupDataSync()
         viewModel.fetchData()
     }
@@ -40,13 +45,15 @@ extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollecti
 
 extension GEUpcomingMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.performBatchUpdates { [weak self] in
-            guard let self = self else { return }
-            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-        } completion: { completed in
-            self.viewModel.updateIndexes.removeAll()
-            debugPrint("")
-        }
+        collectionView.reloadData()
+        return
+//        collectionView.performBatchUpdates { [weak self] in
+//            guard let self = self else { return }
+//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+//        } completion: { completed in
+//            self.viewModel.updateIndexes.removeAll()
+//            debugPrint("")
+//        }
     }
 }
 

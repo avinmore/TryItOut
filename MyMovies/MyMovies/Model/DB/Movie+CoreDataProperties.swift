@@ -32,5 +32,9 @@ extension Movie {
     @NSManaged public var backdrop_path: String?
     @NSManaged public var dateAdded: Date?
     @NSManaged public var genre_list: String?
+    @NSManaged public var is_now_playing: Bool
+    @NSManaged public var is_popular: Bool
+    @NSManaged public var is_upcoming: Bool
+    @NSManaged public var is_top_rated: Bool
 
 }

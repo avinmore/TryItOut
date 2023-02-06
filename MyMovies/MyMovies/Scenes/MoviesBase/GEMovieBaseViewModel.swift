@@ -16,12 +16,19 @@ protocol GEFetchMovieData {
 protocol GERefreshEventProtocol {
     func updateUI()
 }
+enum MovieCategoryType: String {
+    case now_playing = "now_playing"
+    case popular = "popular"
+    case top_rated = "top_rated"
+    case upcoming = "upcoming"
+    case none
+}
 
 class GEMovieBaseViewModel: NSObject {
-    
     private var cancellablesObserver = Set<AnyCancellable>()
     var updateIndexes = [IndexPath]()
     var deletedIndexes = [IndexPath]()
+    static var currentCategory: MovieCategoryType = .none
     var delegate: GERefreshEventProtocol?
     
     func fetch<T: Codable>(_ type: GEAPIRequestType<Int, (String, Int)>, _ responseType: T.Type) -> Future<Bool, Error> {
@@ -124,6 +131,29 @@ extension GEMovieBaseViewModel: NSFetchedResultsControllerDelegate {
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
+        debugPrint("#### \(GEMovieBaseViewModel.currentCategory.rawValue)")
+        switch GEMovieBaseViewModel.currentCategory {
+        case .now_playing:
+            self.fetchMovieRequestController?.fetchRequest.predicate =
+            NSPredicate(format: "SELF.is_now_playing = 1")
+        case .popular:
+            self.fetchMovieRequestController?.fetchRequest.predicate =
+            NSPredicate(format: "SELF.is_popular = 1")
+            
+        case .top_rated:
+            self.fetchMovieRequestController?.fetchRequest.predicate =
+            NSPredicate(format: "SELF.is_top_rated = 1")
+            
+        case .upcoming:
+            self.fetchMovieRequestController?.fetchRequest.predicate =
+            NSPredicate(format: "SELF.is_upcoming = 1")
+        case .none:
+            break
+        }
+        self.fetchMovieRequestController?.fetchRequest.predicate =
+        NSPredicate(format: "SELF.is_now_playing = 1")
+        try? self.fetchMovieRequestController?.performFetch()
         delegate?.updateUI()
     }
 }

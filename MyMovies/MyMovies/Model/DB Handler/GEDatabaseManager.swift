@@ -10,17 +10,19 @@ class GEDatabaseManager {
     static let shared = GEDatabaseManager()
     private init() {}
     
-    func saveData<T: Codable>(_ response: T) {
-        switch response {
-        case let movies as Movies:
-            GEDatabaseWorker.shared.saveMovies(movies)
-        case let genres as GEGenreModel:
-            GEDatabaseWorker.shared.saveGenre(genres)
-        case let movieDetails as GEMovieDetailModel:
-            GEDatabaseWorker.shared.saveMovieDetails(movieDetails)
-        default:
-            
-            print("It's something else")
+    func saveData<T: Codable>(_ response: T, category: String) {
+        DispatchQueue.global(qos: .userInteractive).async {
+            switch response {
+            case let movies as Movies:
+                GEDatabaseWorker.shared.saveMovies(movies, category: category)
+            case let genres as GEGenreModel:
+                GEDatabaseWorker.shared.saveGenre(genres)
+            case let movieDetails as GEMovieDetailModel:
+                GEDatabaseWorker.shared.saveMovieDetails(movieDetails)
+            default:
+                
+                print("It's something else")
+            }
         }
     }
     
@@ -31,4 +33,9 @@ class GEDatabaseManager {
     func fetchAllfavoritesMovies() -> [GEMovie] {
         return GEDatabaseWorker.shared.fetchAllfavoritesMovies().map({ $0.toCGMovie() })
     }
+    
+    func fetchAllMoviesWith(_ category: String) -> [GEMovie] {
+        return GEDatabaseWorker.shared.fetchMoviesByCategories(category: category).map({ $0.toCGMovie() })
+    }
+    
 }

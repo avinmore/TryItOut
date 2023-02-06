@@ -41,7 +41,8 @@ class GENetworkDataManager {
                 guard let response = self.responseParser(data, responseType: T.self) else {
                     return promis(.failure(GEAPIError.invalidResponse))
                 }
-                GEDatabaseManager.shared.saveData(response)
+                let category = self.fatchCategory(requestType)
+                GEDatabaseManager.shared.saveData(response, category: category)
                 return promis(.success(true))
             }.store(in: &self.cancellables)
         }
@@ -65,6 +66,25 @@ class GENetworkDataManager {
             return "search/movie?query=\(queryString)&page=\(pageIndex)&"
         case .genre:
             return "genre/movie/list?"
+        }
+    }
+    
+    private func fatchCategory(_ requestType: GEAPIRequestType<Int, (String, Int)>) -> String {
+        switch requestType {
+        case .nowPlaying:
+            return "now_playing"
+        case .popular:
+            return "popular"
+        case .topRated:
+            return "top_rated"
+        case .upcoming:
+            return "upcoming"
+        case .details:
+            return "details"
+        case .query:
+            return "query"
+        case .genre:
+            return "genre"
         }
     }
     

@@ -19,6 +19,14 @@ class GENowPlayingMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
         fetch(.nowPlaying(nextPage), Movies.self).sink { completion in
             switch completion {
             case .finished:
+                //_ = GEDatabaseManager.shared.fetchAllMoviesWith("now_playing")
+                
+//                self.fetchMovieRequestController?.fetchRequest.predicate =
+//                    NSPredicate(format: "SELF.is_now_playing = 1")
+//                try? self.fetchMovieRequestController?.performFetch()
+//
+//                
+                
                 self.currentPage = self.nextPage
             case .failure(let error):
                 print("failure \(error)")
