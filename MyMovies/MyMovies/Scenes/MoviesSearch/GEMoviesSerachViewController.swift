@@ -16,8 +16,9 @@ class GEMoviesSerachViewController: GEMoviesBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
+        collectionView.dataSource = nil
+        setupDataSource()
         navigationItem.titleView = searchController.searchBar
-        //definesPresentationContext = true
         self.searchController.hidesNavigationBarDuringPresentation = false
 
         searchController.searchResultsUpdater = self
@@ -26,6 +27,23 @@ class GEMoviesSerachViewController: GEMoviesBaseViewController {
         viewModel.setupDataSync()
         viewModel.fetchData()
     }
+    
+    func setupDataSource() {
+        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: {
+            collectionView, indexPath, itemIdentifier in
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+                assertionFailure()
+                return UICollectionViewCell()
+            }
+            let movie = self.viewModel.movieData[indexPath.row]
+//            debugPrint("####\(movie.is_now_playing ?? false )")
+            cell.loadCellData(movie)
+            return cell
+        })
+    }
+    
+    
 }
 extension GEMoviesSerachViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
@@ -50,6 +68,13 @@ extension GEMoviesSerachViewController: UICollectionViewDataSource, UICollection
         }
         cell.loadCellData(viewModel.movieForIndexPath(indexPath))
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let totalItemCount = self.viewModel.movieData.count
+        if indexPath.row == totalItemCount - 5 {
+            viewModel.fetchData()
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

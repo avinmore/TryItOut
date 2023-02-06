@@ -23,6 +23,10 @@ class GEDatabaseWorker {
     
     private let queue = DispatchQueue(label: "com.myapp.singletonQueue")
     var managedContext: NSManagedObjectContext?
+    
+    let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    
+    
 //    var managedContext: NSManagedObjectContext? {
 //        get {
 //            return queue.sync { _managedContext }
@@ -33,55 +37,75 @@ class GEDatabaseWorker {
 //    }
     
     private var genres: [Genres] = []
+    func saveDatabase() {
+        do {
+            try self.privateMOC.save()
+            GEDatabaseWorker.shared.managedContext?.performAndWait {
+                do {
+                    try GEDatabaseWorker.shared.managedContext?.save()
+                } catch {
+                    fatalError("Failure to save context: \(error)")
+                }
+            }
+        } catch {
+            fatalError("Failure to save context: \(error)")
+        }
+    }
 
     func saveMovies(_ movies: Movies, category: String) {
+        if GEDatabaseWorker.shared.privateMOC.parent == nil {
+            GEDatabaseWorker.shared.privateMOC.parent = GEDatabaseWorker.shared.managedContext
+        }
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
         if genres.isEmpty {
             genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
         }
-        for movie in movies.results {
-            let fetchMoviesRequest = Movie.fetchRequest()
-            fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
-            do {
-                if let existing = try? context.fetch(fetchMoviesRequest),
-                    let existingObject = existing.first {
-                    existingObject.is_popular = existingObject.is_popular ? existingObject.is_popular : category == MovieCategoryType.popular.rawValue
-                    existingObject.is_upcoming = existingObject.is_upcoming ? existingObject.is_upcoming : category == MovieCategoryType.upcoming.rawValue
-                    existingObject.is_top_rated = existingObject.is_top_rated ? existingObject.is_top_rated : category == MovieCategoryType.top_rated.rawValue
-                    existingObject.is_now_playing = existingObject.is_now_playing ? existingObject.is_now_playing : category == MovieCategoryType.now_playing.rawValue
-                    existingObject.dateAdded = Date()
-                    saveData(context)
-                    continue
-                }
-            } catch {}
+        privateMOC.perform {
             
-            let manageObject = Movie(context: context)
-            manageObject.genre_ids = movie.genreIDS?.data
-            manageObject.id = Int64(movie.id)
-            manageObject.original_language = movie.originalLanguage
-            manageObject.adult = movie.adult
-            manageObject.original_title = movie.originalTitle
-            manageObject.overview = movie.overview
-            manageObject.popularity = movie.popularity ?? 0
-            manageObject.poster_path = movie.posterPath
-            manageObject.release_date = movie.releaseDate
-            manageObject.title = movie.title
-            manageObject.video = movie.video ?? false
-            manageObject.vote_average = movie.voteAverage ?? 0
-            manageObject.vote_count = Int64(movie.voteCount ?? 0)
-            manageObject.dateAdded = Date()
-            manageObject.genre_list = movie.genreIDS?.map { fetchGenreFor($0) }.joined(separator: " * ")
-            manageObject.is_popular = category == MovieCategoryType.popular.rawValue
-            manageObject.is_upcoming = category == MovieCategoryType.upcoming.rawValue
-            manageObject.is_top_rated = category == MovieCategoryType.top_rated.rawValue
-            manageObject.is_now_playing = category == MovieCategoryType.now_playing.rawValue
-            
-            let moviecategory = MovieCategory(context: context)
-            moviecategory.id = Int64(movie.id)
-            moviecategory.type = category
-            saveData(context)
+            for movie in movies.results {
+                let fetchMoviesRequest = Movie.fetchRequest()
+                fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
+                do {
+                    if let existing = try? context.fetch(fetchMoviesRequest),
+                       let existingObject = existing.first {
+                        existingObject.is_popular = existingObject.is_popular ? existingObject.is_popular : category == MovieCategoryType.popular.rawValue
+                        existingObject.is_upcoming = existingObject.is_upcoming ? existingObject.is_upcoming : category == MovieCategoryType.upcoming.rawValue
+                        existingObject.is_top_rated = existingObject.is_top_rated ? existingObject.is_top_rated : category == MovieCategoryType.top_rated.rawValue
+                        existingObject.is_now_playing = existingObject.is_now_playing ? existingObject.is_now_playing : category == MovieCategoryType.now_playing.rawValue
+                        existingObject.dateAdded = Date()
+                        
+                        continue
+                    }
+                } catch {}
+                
+                let manageObject = Movie(context: context)
+                manageObject.genre_ids = movie.genreIDS?.data
+                manageObject.id = Int64(movie.id)
+                manageObject.original_language = movie.originalLanguage
+                manageObject.adult = movie.adult
+                manageObject.original_title = movie.originalTitle
+                manageObject.overview = movie.overview
+                manageObject.popularity = movie.popularity ?? 0
+                manageObject.poster_path = movie.posterPath
+                manageObject.release_date = movie.releaseDate
+                manageObject.title = movie.title
+                manageObject.video = movie.video ?? false
+                manageObject.vote_average = movie.voteAverage ?? 0
+                manageObject.vote_count = Int64(movie.voteCount ?? 0)
+                manageObject.dateAdded = Date()
+                manageObject.genre_list = movie.genreIDS?.map { self.fetchGenreFor($0) }.joined(separator: " * ")
+                manageObject.is_popular = category == MovieCategoryType.popular.rawValue
+                manageObject.is_upcoming = category == MovieCategoryType.upcoming.rawValue
+                manageObject.is_top_rated = category == MovieCategoryType.top_rated.rawValue
+                manageObject.is_now_playing = category == MovieCategoryType.now_playing.rawValue
+                
+                let moviecategory = MovieCategory(context: context)
+                moviecategory.id = Int64(movie.id)
+                moviecategory.type = category
+                //saveData(context)
+            }//for
+            self.saveDatabase()
         }
-        
     }
     
     func fetchGenreFor(_ id: Int) -> String {
@@ -213,6 +237,20 @@ class GEDatabaseWorker {
                 let categoryMovies = fetchfavoriteMovies(ids)
                 return categoryMovies
             }
+        } catch {
+            // print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return []
+    }
+    
+    func fetchMoviesQuery(_ query: String) -> [Movie] {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
+        let fetchMoviesRequest = Movie.fetchRequest()
+        let predicate = NSPredicate(format: "SELF.title BEGINSWITH[c] %@", query)
+        fetchMoviesRequest.predicate = predicate
+        do {
+            let movies = try context.fetch(fetchMoviesRequest)
+            return movies
         } catch {
             // print("Could not fetch. \(error), \(error.userInfo)")
         }

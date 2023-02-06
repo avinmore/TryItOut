@@ -39,4 +39,8 @@ class GEDatabaseManager {
         return GEDatabaseWorker.shared.fetchMoviesByCategories(category: category).map({ $0.toCGMovie() })
     }
     
+    func fetchAllMoviesWithQuery(_ query: String) -> [GEMovie] {
+        return GEDatabaseWorker.shared.fetchMoviesQuery(query).map({ $0.toCGMovie() })
+    }
+    
 }
