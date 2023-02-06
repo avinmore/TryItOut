@@ -39,6 +39,7 @@ struct GEMovie: Codable, Hashable {
     var is_popular: Bool = false
     var is_top_rated: Bool = false
     var is_upcoming: Bool = false
+    var dateAdded: Date?
     
     enum CodingKeys: String, CodingKey {
         case adult
@@ -84,7 +85,8 @@ extension Movie {
                        is_now_playing: self.is_now_playing,
                        is_popular: self.is_popular,
                        is_top_rated: self.is_top_rated,
-                       is_upcoming: self.is_upcoming)
+                       is_upcoming: self.is_upcoming,
+                       dateAdded: self.dateAdded)
     }
 }
 

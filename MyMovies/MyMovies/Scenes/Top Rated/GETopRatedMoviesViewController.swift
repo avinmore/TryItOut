@@ -59,8 +59,8 @@ extension GETopRatedMoviesViewController: UICollectionViewDataSource, UICollecti
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = viewModel.movieForIndexPath(indexPath)
-        navigateToMovieDetails(movie?.id)
+        let movie = self.viewModel.movieData[indexPath.row]
+        navigateToMovieDetails(movie.id)
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
