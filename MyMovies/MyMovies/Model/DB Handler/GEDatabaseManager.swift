@@ -16,7 +16,10 @@ class GEDatabaseManager {
             GEDatabaseWorker.shared.saveMovies(movies)
         case let genres as GEGenreModel:
             GEDatabaseWorker.shared.saveGenre(genres)
+        case let movieDetails as GEMovieDetailModel:
+            GEDatabaseWorker.shared.saveMovieDetails(movieDetails)
         default:
+            
             print("It's something else")
         }
     }

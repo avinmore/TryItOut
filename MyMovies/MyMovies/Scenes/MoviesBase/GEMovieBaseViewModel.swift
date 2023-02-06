@@ -24,11 +24,11 @@ class GEMovieBaseViewModel: NSObject {
     var deletedIndexes = [IndexPath]()
     var delegate: GERefreshEventProtocol?
     
-    func fetch(_ type: GEAPIRequestType<Int, (String, Int)>) -> Future<Bool, Error> {
+    func fetch<T: Codable>(_ type: GEAPIRequestType<Int, (String, Int)>, _ responseType: T.Type) -> Future<Bool, Error> {
         return Future { [weak self] promis in
             guard let self = self else { return }
             GENetworkDataManager.shared.fetchDataRequest(type,
-                responseType: Movies.self).sink { completion in
+                responseType: responseType).sink { completion in
                 switch completion {
                 case .finished:
                     promis(.success(true))
@@ -79,6 +79,25 @@ class GEMovieBaseViewModel: NSObject {
         fetchResult.delegate = self
         return fetchResult
     }()
+    
+    func setupMovieDetailDataSync() {
+        do {
+            try fetchMovieDetailsRequestController?.performFetch()
+        } catch {
+            print("error \(error)")
+        }
+    }
+    
+    lazy var fetchMovieDetailsRequestController: NSFetchedResultsController<MovieDetail>? = {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return nil }
+        let fetchRequest = MovieDetail.fetchRequest()
+        let sortDescripters = [NSSortDescriptor(key: "id != nil", ascending: true)]
+        fetchRequest.sortDescriptors = sortDescripters
+        let fetchResult = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+        fetchResult.delegate = self
+        return fetchResult
+    }()
+    
 }
 
 extension GEMovieBaseViewModel: NSFetchedResultsControllerDelegate {

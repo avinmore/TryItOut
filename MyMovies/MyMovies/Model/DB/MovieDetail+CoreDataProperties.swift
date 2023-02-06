@@ -2,7 +2,7 @@
 //  MovieDetail+CoreDataProperties.swift
 //  
 //
-//  Created by Avin on 5/2/23.
+//  Created by Avin on 6/2/23.
 //
 //
 
@@ -19,9 +19,9 @@ extension MovieDetail {
     @NSManaged public var adult: Bool
     @NSManaged public var backdrop_path: String?
     @NSManaged public var budget: Int64
-    @NSManaged public var genres: NSObject?
+    @NSManaged public var genres: Data?
     @NSManaged public var homepage: String?
-    @NSManaged public var id: Int16
+    @NSManaged public var id: Int64
     @NSManaged public var imdb_id: String?
     @NSManaged public var original_language: String?
     @NSManaged public var original_title: String?
@@ -30,13 +30,14 @@ extension MovieDetail {
     @NSManaged public var poster_path: String?
     @NSManaged public var release_date: String?
     @NSManaged public var revenue: Int64
-    @NSManaged public var runtime: Int16
-    @NSManaged public var spoken_languages: NSObject?
+    @NSManaged public var runtime: Int64
+    @NSManaged public var spoken_languages: Data?
     @NSManaged public var status: String?
     @NSManaged public var tagline: String?
     @NSManaged public var title: String?
     @NSManaged public var video: Bool
     @NSManaged public var vote_average: Float
-    @NSManaged public var vote_count: Int16
+    @NSManaged public var vote_count: Int64
+    @NSManaged public var genre_list: String?
 
 }

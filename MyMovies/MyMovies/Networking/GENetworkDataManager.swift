@@ -12,6 +12,7 @@ enum GEAPIRequestType<I, S> {
     case popular(I)
     case topRated(I)
     case upcoming(I)
+    case details(I)
     case query(S)
     case genre
 }
@@ -56,6 +57,8 @@ class GENetworkDataManager {
             return "movie/top_rated?page=\(pageIndex)&"
         case .upcoming(let pageIndex):
             return "movie/upcoming?page=\(pageIndex)&"
+        case .details(let movieId):
+            return "movie/\(movieId)?"
         case .query(let searchParams):
             let queryString = searchParams.0
             let pageIndex = searchParams.1

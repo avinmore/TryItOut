@@ -2,7 +2,7 @@
 //  Movie+CoreDataProperties.swift
 //  
 //
-//  Created by Avin on 5/2/23.
+//  Created by Avin on 6/2/23.
 //
 //
 
@@ -28,7 +28,7 @@ extension Movie {
     @NSManaged public var title: String?
     @NSManaged public var video: Bool
     @NSManaged public var vote_average: Double
-    @NSManaged public var vote_count: Int16
+    @NSManaged public var vote_count: Int64
     @NSManaged public var backdrop_path: String?
     @NSManaged public var dateAdded: Date?
     @NSManaged public var genre_list: String?

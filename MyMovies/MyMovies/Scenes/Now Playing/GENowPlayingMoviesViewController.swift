@@ -60,6 +60,7 @@ extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollec
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = viewModel.movieForIndexPath(indexPath)
         debugPrint("### \(movie?.id ?? 0)")
+        navigateToMovieDetails(movie?.id)
     }
 }
 

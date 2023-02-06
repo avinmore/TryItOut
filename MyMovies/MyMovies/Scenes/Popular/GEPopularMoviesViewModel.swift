@@ -14,7 +14,7 @@ class GEPopularMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     var nextPage = 1
     func fetchData() {
         nextPage = currentPage + 1
-        fetch(.popular(nextPage)).sink { completion in
+        fetch(.popular(nextPage), Movies.self).sink { completion in
             switch completion {
             case .finished:
                 self.currentPage = self.nextPage

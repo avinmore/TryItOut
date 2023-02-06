@@ -13,7 +13,7 @@ class GEUpcomingMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     var nextPage = 1
     func fetchData() {
         nextPage = currentPage + 1
-        fetch(.upcoming(nextPage)).sink { completion in
+        fetch(.upcoming(nextPage), Movies.self).sink { completion in
             switch completion {
             case .finished:
                 self.currentPage = self.nextPage

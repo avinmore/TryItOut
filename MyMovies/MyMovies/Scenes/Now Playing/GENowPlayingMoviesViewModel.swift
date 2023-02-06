@@ -16,7 +16,7 @@ class GENowPlayingMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     var nextPage = 1
     func fetchData() {
         nextPage = currentPage + 1
-        fetch(.nowPlaying(nextPage)).sink { completion in
+        fetch(.nowPlaying(nextPage), Movies.self).sink { completion in
             switch completion {
             case .finished:
                 self.currentPage = self.nextPage

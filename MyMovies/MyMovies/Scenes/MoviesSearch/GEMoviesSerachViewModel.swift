@@ -22,7 +22,7 @@ class GEMoviesSerachViewModel: GEMovieBaseViewModel, GEFetchMovieData {
         nextPage = currentPage + 1
         
         
-        fetch(.query((movieName, nextPage))).sink { [weak self] completion in
+        fetch(.query((movieName, nextPage)), Movies.self).sink { [weak self] completion in
             guard let self = self else { return }
             switch completion {
             case .finished:

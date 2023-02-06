@@ -2,7 +2,7 @@
 //  Genre+CoreDataProperties.swift
 //  
 //
-//  Created by Avin on 5/2/23.
+//  Created by Avin on 6/2/23.
 //
 //
 
@@ -16,7 +16,7 @@ extension Genre {
         return NSFetchRequest<Genre>(entityName: "Genre")
     }
 
-    @NSManaged public var id: Int16
+    @NSManaged public var id: Int64
     @NSManaged public var name: String?
 
 }
