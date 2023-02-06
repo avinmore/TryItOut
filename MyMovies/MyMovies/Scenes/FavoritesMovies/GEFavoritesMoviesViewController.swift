@@ -32,6 +32,11 @@ extension GEFavoritesMoviesViewController: UICollectionViewDataSource, UICollect
         cell.loadCellData(viewModel.favoriteMovies[indexPath.row])
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = viewModel.favoriteMovies[indexPath.row]
+        navigateToMovieDetails(movie.id)
+    }
 }
 
 extension GEFavoritesMoviesViewController: GERefreshEventProtocol {

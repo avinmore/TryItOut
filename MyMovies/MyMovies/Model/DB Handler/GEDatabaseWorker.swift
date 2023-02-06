@@ -25,11 +25,15 @@ class GEDatabaseWorker {
         for movie in movies.results {
             var manageObject = Movie(context: context)
             //check exists
-            let fetchMoviesRequest = Movie.fetchRequest()
-            fetchMoviesRequest.predicate = NSPredicate(format: "id == \(Int64(movie.id))")
-            if let movies = try? context.fetch(fetchMoviesRequest), let existingMovie = movies.first {
-                manageObject = existingMovie
-            }
+//            let fetchMoviesRequest = Movie.fetchRequest()
+//            fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
+//            fetchMoviesRequest.fetchLimit = 1
+//            if let count = try? context.count(for: fetchMoviesRequest),
+//               count == 1,
+//                let movies = try? context.fetch(fetchMoviesRequest),
+//                let existingMovie = movies.first {
+//                manageObject = existingMovie
+//            }
             manageObject.genre_ids = movie.genreIDS?.data
             manageObject.id = Int64(movie.id)
             manageObject.original_language = movie.originalLanguage

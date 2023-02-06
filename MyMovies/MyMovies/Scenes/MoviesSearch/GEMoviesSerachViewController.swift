@@ -51,6 +51,11 @@ extension GEMoviesSerachViewController: UICollectionViewDataSource, UICollection
         cell.loadCellData(viewModel.movieForIndexPath(indexPath))
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let movie = viewModel.movieForIndexPath(indexPath)
+        navigateToMovieDetails(movie?.id)
+    }
 }
 
 extension GEMoviesSerachViewController: GERefreshEventProtocol {
