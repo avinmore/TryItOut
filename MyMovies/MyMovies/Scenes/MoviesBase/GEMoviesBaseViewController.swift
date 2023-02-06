@@ -20,7 +20,7 @@ class GEMoviesBaseViewController: UIViewController {
         collectionView.register(CGMovieCollectionViewCell.self, forCellWithReuseIdentifier: "CGMovieCollectionViewCell")
         collectionView.frame = controller.view.frame
         collectionView.delegate = controller
-        collectionView.dataSource = controller
+//        collectionView.dataSource = controller
         controller.view.addSubview(collectionView)
         // Add constraints
         collectionView.translatesAutoresizingMaskIntoConstraints = false

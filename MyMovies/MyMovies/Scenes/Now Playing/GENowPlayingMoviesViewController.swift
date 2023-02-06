@@ -14,10 +14,29 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
+        collectionView.dataSource = nil
+        setupDataSource()
         viewModel.delegate = self
         viewModel.fetchGenreData()
     }
     
+    func setupDataSource() {
+        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: {
+            collectionView, indexPath, itemIdentifier in
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+                assertionFailure()
+                return UICollectionViewCell()
+            }
+            let movie = self.viewModel.movieData[indexPath.row]
+            debugPrint("####\(movie.is_now_playing ?? false )")
+            cell.loadCellData(movie)
+            return cell
+        })
+    }
+    
+   
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         GEMovieBaseViewModel.currentCategory = MovieCategoryType.now_playing
@@ -28,15 +47,14 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
 
 extension GENowPlayingMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-//        collectionView.reloadData()
-//        return
-        collectionView.performBatchUpdates { [weak self] in
-            guard let self = self else { return }
-            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-        } completion: { completed in
-            self.viewModel.updateIndexes.removeAll()
-            debugPrint("")
-        }
+        //viewModel.updateDataSource()
+//        collectionView.performBatchUpdates { [weak self] in
+//            guard let self = self else { return }
+//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+//        } completion: { completed in
+//            self.viewModel.updateIndexes.removeAll()
+//            debugPrint("")
+//        }
     }
 }
 
@@ -51,17 +69,14 @@ extension GENowPlayingMoviesViewController: UICollectionViewDataSource, UICollec
             return UICollectionViewCell()
         }
         let movie = viewModel.movieForIndexPath(indexPath)
-        //debugPrint("### \(movie?.is_popular)")
         cell.loadCellData(movie)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let totalItemCount = viewModel.numberOfItemInSections(indexPath.section)
+        let totalItemCount = self.viewModel.movieData.count
         if indexPath.row == totalItemCount - 5 {
-            if viewModel.currentPage < totalItemCount {
-                    viewModel.fetchData()
-            }
+            viewModel.fetchData()
         }
     }
     

@@ -13,6 +13,8 @@ class GEPopularMoviesViewController: GEMoviesBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
+        collectionView.dataSource = nil
+        setupDataSource()
         viewModel.delegate = self
     }
     
@@ -21,6 +23,20 @@ class GEPopularMoviesViewController: GEMoviesBaseViewController {
         GEMovieBaseViewModel.currentCategory = MovieCategoryType.popular
         viewModel.setupDataSync()
         viewModel.fetchData()
+    }
+    
+    func setupDataSource() {
+        viewModel.dataSource = UICollectionViewDiffableDataSource(collectionView: collectionView, cellProvider: {
+            collectionView, indexPath, itemIdentifier in
+            guard let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+                assertionFailure()
+                return UICollectionViewCell()
+            }
+            let movie = self.viewModel.movieData[indexPath.row]
+            cell.loadCellData(movie)
+            return cell
+        })
     }
 }
 
@@ -36,8 +52,8 @@ extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectio
         }
         
         cell.loadCellData(viewModel.popularMovieForIndexPath(indexPath))
-        let movie = viewModel.popularMovieForIndexPath(indexPath)
-        debugPrint("### \(movie?.is_popular)")
+        //let movie = viewModel.popularMovieForIndexPath(indexPath)
+        //debugPrint("### \(movie?.is_popular)")
         return cell
     }
     
@@ -46,18 +62,25 @@ extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectio
         navigateToMovieDetails(movie?.id)
     }
 
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let totalItemCount = self.viewModel.movieData.count
+        if indexPath.row == totalItemCount - 5 {
+            viewModel.fetchData()
+        }
+    }
+    
 }
 
 extension GEPopularMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
 //          collectionView.reloadData()
 //        return
-        collectionView.performBatchUpdates { [weak self] in
-            guard let self = self else { return }
-            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-        } completion: { completed in
-            self.viewModel.updateIndexes.removeAll()
-            debugPrint("")
-        }
+//        collectionView.performBatchUpdates { [weak self] in
+//            guard let self = self else { return }
+//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
+//        } completion: { completed in
+//            self.viewModel.updateIndexes.removeAll()
+//            debugPrint("")
+//        }
     }
 }

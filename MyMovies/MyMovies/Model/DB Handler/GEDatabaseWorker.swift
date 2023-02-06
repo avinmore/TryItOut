@@ -17,28 +17,43 @@ enum FavoriteStatus {
 class GEDatabaseWorker {
     static let shared = GEDatabaseWorker()
     private init() {}
-    var managedContext: NSManagedObjectContext?
+//    var managedContext: NSManagedObjectContext?
+    
+    
+    
+    private let queue = DispatchQueue(label: "com.myapp.singletonQueue")
+    private var _managedContext: NSManagedObjectContext?
+    var managedContext: NSManagedObjectContext? {
+        get {
+            return queue.sync { _managedContext }
+        }
+        set {
+            queue.sync { _managedContext = newValue }
+        }
+    }
+    
     private var genres: [Genres] = []
 
     func saveMovies(_ movies: Movies, category: String) {
-        
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
-        genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
+        if genres.isEmpty {
+            genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
+        }
         for movie in movies.results {
             let fetchMoviesRequest = Movie.fetchRequest()
             fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
-//            do {
-//                if let existing = try? context.fetch(fetchMoviesRequest),
-//                    let existingObject = existing.first {
-//                    existingObject.is_popular = category == MovieCategoryType.popular.rawValue
-//                    existingObject.is_upcoming = category == MovieCategoryType.upcoming.rawValue
-//                    existingObject.is_top_rated = category == MovieCategoryType.top_rated.rawValue
-//                    existingObject.is_now_playing = category == MovieCategoryType.now_playing.rawValue
-//                    existingObject.dateAdded = Date()
-//                    saveData(context)
-//                    continue
-//                }
-//            } catch {}
+            do {
+                if let existing = try? context.fetch(fetchMoviesRequest),
+                    let existingObject = existing.first {
+                    existingObject.is_popular = existingObject.is_popular ? existingObject.is_popular : category == MovieCategoryType.popular.rawValue
+                    existingObject.is_upcoming = existingObject.is_upcoming ? existingObject.is_upcoming : category == MovieCategoryType.upcoming.rawValue
+                    existingObject.is_top_rated = existingObject.is_top_rated ? existingObject.is_top_rated : category == MovieCategoryType.top_rated.rawValue
+                    existingObject.is_now_playing = existingObject.is_now_playing ? existingObject.is_now_playing : category == MovieCategoryType.now_playing.rawValue
+                    existingObject.dateAdded = Date()
+                    saveData(context)
+                    continue
+                }
+            } catch {}
             
             let manageObject = Movie(context: context)
             manageObject.genre_ids = movie.genreIDS?.data
@@ -114,26 +129,27 @@ class GEDatabaseWorker {
         manageObject.vote_count = Int64(movieDetail.voteCount ?? 0)
         saveData(context)
     }
+    
+    func deleteAllGenre() {
+        guard let context = GEDatabaseWorker.shared.managedContext else { return }
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: Genre.fetchRequest())
+        do {
+            try context.execute(batchDeleteRequest)
+        } catch {
+            // handle error
+        }
+        saveData(context)
+    }
+    
     func saveGenre(_ genres: GEGenreModel) {
+        deleteAllGenre()
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
         for genre in genres.genres {
-            
-            let fetchMoviesRequest = Genre.fetchRequest()
-            fetchMoviesRequest.predicate = NSPredicate(format: "id == \(genre.id)")
-            do {
-                if let existing = try? context.fetch(fetchMoviesRequest), let existingObject = existing.first {
-                    existingObject.id = Int64(genre.id)
-                    existingObject.name = genre.name
-                    saveData(context)
-                    continue
-                }
-            } catch {}
-            
             let manageObject = Genre(context: context)
             manageObject.id = Int64(genre.id)
             manageObject.name = genre.name
-            saveData(context)
         }
+        saveData(context)
     }
     
     func updateFavoriteStatus(_ id: Int) -> FavoriteStatus  {
@@ -174,6 +190,8 @@ class GEDatabaseWorker {
         guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
         let fetchMoviesRequest = Movie.fetchRequest()
         let predicate = NSPredicate(format: "id IN %@", ids)
+        let sort = NSSortDescriptor(key: "dateAdded", ascending: true)
+        fetchMoviesRequest.sortDescriptors = [sort]
         fetchMoviesRequest.predicate = predicate
         do {
             let movies = try context.fetch(fetchMoviesRequest)
@@ -190,10 +208,11 @@ class GEDatabaseWorker {
         let predicate = NSPredicate(format: "type = %@", category)
         fetchMoviesRequest.predicate = predicate
         do {
-            let movies = try context.fetch(fetchMoviesRequest)
-            let ids = Array(Set(Set( movies.map({ Int($0.id) } ) )))
-            let categoryMovies = fetchfavoriteMovies(ids)
-            return categoryMovies
+            if let movies = try? context.fetch(fetchMoviesRequest) {
+                let ids = Array(Set(Set( movies.map({ Int($0.id) } ) )))
+                let categoryMovies = fetchfavoriteMovies(ids)
+                return categoryMovies
+            }
         } catch {
             // print("Could not fetch. \(error), \(error.userInfo)")
         }
@@ -217,7 +236,7 @@ class GEDatabaseWorker {
             try context.save()
         } catch let error as NSError {
             if error.domain == NSCocoaErrorDomain && error.code == 133021 {
-                //print("## Duplicate detected")
+                print("## Duplicate detected")
             }
             //print("Could not save. \(error), \(error.userInfo)")
         }

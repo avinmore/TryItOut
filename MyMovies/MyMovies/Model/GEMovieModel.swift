@@ -5,7 +5,7 @@
 //  Created by Avin on 4/2/23.
 //
 import Foundation
-struct Movies: Codable {
+struct Movies: Codable, Hashable {
     let dates: Dates?
     let page: Int
     let results: [GEMovie]
@@ -18,7 +18,7 @@ struct Movies: Codable {
     }
 }
 
-struct Dates: Codable {
+struct Dates: Codable, Hashable {
     let maximum, minimum: String
 }
 
@@ -56,6 +56,13 @@ struct GEMovie: Codable, Hashable {
         case voteCount = "vote_count"
     }
 }
+
+extension GEMovie: Equatable {
+    static func == (lhs: GEMovie, rhs: GEMovie) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 //Move to other file
 extension Movie {
     func toCGMovie() -> GEMovie {
@@ -79,4 +86,8 @@ extension Movie {
                        is_top_rated: self.is_top_rated,
                        is_upcoming: self.is_upcoming)
     }
+}
+
+enum Section {
+    case first
 }
