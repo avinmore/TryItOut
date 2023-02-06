@@ -29,7 +29,7 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
                 return UICollectionViewCell()
             }
             let movie = self.viewModel.movieData[indexPath.row]
-            debugPrint("####\(movie.is_now_playing ?? false )")
+//            debugPrint("####\(movie.is_now_playing ?? false )")
             cell.loadCellData(movie)
             return cell
         })

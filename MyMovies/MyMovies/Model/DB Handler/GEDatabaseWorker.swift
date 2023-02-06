@@ -22,15 +22,15 @@ class GEDatabaseWorker {
     
     
     private let queue = DispatchQueue(label: "com.myapp.singletonQueue")
-    private var _managedContext: NSManagedObjectContext?
-    var managedContext: NSManagedObjectContext? {
-        get {
-            return queue.sync { _managedContext }
-        }
-        set {
-            queue.sync { _managedContext = newValue }
-        }
-    }
+    var managedContext: NSManagedObjectContext?
+//    var managedContext: NSManagedObjectContext? {
+//        get {
+//            return queue.sync { _managedContext }
+//        }
+//        set {
+//            queue.sync { _managedContext = newValue }
+//        }
+//    }
     
     private var genres: [Genres] = []
 

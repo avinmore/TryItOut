@@ -23,13 +23,12 @@ class GEMovieDetailsViewModel: GEMovieBaseViewModel, GEFetchMovieData {
         fetch(.details(movieId), GEMovieDetailModel.self).sink { completion in
             switch completion {
             case .finished:
-                
                 DispatchQueue.main.async {
                     self.fetchMovieDetailsRequestController?.fetchRequest.predicate = NSPredicate(format: "id == %d", movieId)
                     try? self.fetchMovieDetailsRequestController?.performFetch()
                     self.delegate?.updateUI()
                 }
-                print("finished")
+                //print("finished")
             case .failure(let error):
                 print("failure \(error)")
             }

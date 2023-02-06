@@ -34,7 +34,7 @@ extension GEMoviesSerachViewController: UISearchResultsUpdating {
         let filteredString = searchString?.replacingOccurrences(of: "[\\s.]{2,}", with: "", options: .regularExpression)
         if filteredString != viewModel.movieName {
             viewModel.movieName = filteredString ?? ""
-            print("### \(viewModel.movieName)")
+            //print("### \(viewModel.movieName)")
         }        
     }
 }

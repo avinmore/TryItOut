@@ -52,8 +52,8 @@ extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollecti
         }
         
         cell.loadCellData(viewModel.movieForIndexPath(indexPath))
-        let movie = viewModel.movieForIndexPath(indexPath)
-        debugPrint("### \(movie?.is_upcoming)")
+//        let movie = viewModel.movieForIndexPath(indexPath)
+//        debugPrint("### \(movie?.is_upcoming)")
         return cell
     }
     

@@ -9,9 +9,10 @@ import Foundation
 class GEDatabaseManager {
     static let shared = GEDatabaseManager()
     private init() {}
-    
+    let databaseQueue = DispatchQueue(label: "com.myapp.databaseQueue", qos: .utility)
+
     func saveData<T: Codable>(_ response: T, category: String) {
-        DispatchQueue.global(qos: .userInteractive).async {
+        databaseQueue.async {
             switch response {
             case let movies as Movies:
                 GEDatabaseWorker.shared.saveMovies(movies, category: category)
