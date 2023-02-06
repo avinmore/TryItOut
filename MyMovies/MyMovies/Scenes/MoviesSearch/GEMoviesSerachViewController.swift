@@ -55,17 +55,7 @@ extension GEMoviesSerachViewController: UICollectionViewDataSource, UICollection
 
 extension GEMoviesSerachViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.performBatchUpdates { [weak self] in
-            guard let self = self else { return }
-            self.collectionView.deleteItems(at: self.viewModel.deletedIndexes)
-            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-          } completion: { completed in
-              if !completed {
-                  self.collectionView.reloadData()
-              }
-              self.viewModel.updateIndexes.removeAll()
-              debugPrint("")
-          }
+        collectionView.reloadData()        
     }
 }
 
