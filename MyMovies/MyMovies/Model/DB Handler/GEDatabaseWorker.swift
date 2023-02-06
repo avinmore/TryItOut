@@ -7,6 +7,13 @@
 import Foundation
 import UIKit
 import CoreData
+
+enum FavoriteStatus {
+    case favorite
+    case yetToFavorite
+    case na
+}
+
 class GEDatabaseWorker {
     static let shared = GEDatabaseWorker()
     private init() {}
@@ -89,6 +96,28 @@ class GEDatabaseWorker {
             manageObject.name = genre.name
         }
         saveData(context)
+    }
+    
+    func updateFavoriteStatus(_ id: Int) -> FavoriteStatus  {
+        //update favorite table
+        guard let context = GEDatabaseWorker.shared.managedContext else { return .na }
+        let fetchMoviesRequest = FavoriteMovies.fetchRequest()
+        fetchMoviesRequest.predicate = NSPredicate(format: "id == \(id)")
+        var status = FavoriteStatus.yetToFavorite
+        do {
+            let movies = try context.fetch(fetchMoviesRequest)
+            if let movieDet = movies.first {
+                context.delete(movieDet)
+            } else {
+                let manageObject = FavoriteMovies(context: context)
+                manageObject.id = Int64(id)
+                status = .favorite
+            }
+        } catch let error as NSError {
+            // print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        saveData(context)
+        return status
     }
     
 //    func fetchMovies() {

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21D62" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FavoriteMovies" representedClassName="FavoriteMovies" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
     <entity name="Genre" representedClassName="Genre" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -61,5 +69,6 @@
         <element name="Movie" positionX="-63" positionY="-18" width="128" height="269"/>
         <element name="Genre" positionX="-54" positionY="90" width="128" height="59"/>
         <element name="MovieDetail" positionX="-36" positionY="99" width="128" height="374"/>
+        <element name="FavoriteMovies" positionX="-18" positionY="171" width="128" height="44"/>
     </elements>
 </model>

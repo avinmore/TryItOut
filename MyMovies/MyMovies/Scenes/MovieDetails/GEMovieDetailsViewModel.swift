@@ -7,6 +7,9 @@
 
 import Foundation
 import Combine
+protocol GEMakeMoviefavorite {
+    func updateFavoriteStatus(_ id: Int?) -> FavoriteStatus
+}
 class GEMovieDetailsViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     private var cancellables = Set<AnyCancellable>()
     var movieId: Int? {
@@ -33,5 +36,13 @@ class GEMovieDetailsViewModel: GEMovieBaseViewModel, GEFetchMovieData {
         } receiveValue: { result in
             
         }.store(in: &cancellables)
+    }
+}
+
+extension GEMovieDetailsViewModel: GEMakeMoviefavorite {
+    func updateFavoriteStatus(_ id: Int?) -> FavoriteStatus {
+        //add id in favorites DB
+        guard let id = id else { return .na }
+        return GEDatabaseManager.shared.updateFavoriteStatus(id)
     }
 }

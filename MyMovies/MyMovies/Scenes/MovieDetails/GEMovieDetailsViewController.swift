@@ -35,6 +35,7 @@ extension GEMovieDetailsViewController: UITableViewDataSource, UIScrollViewDeleg
             header.loadBackdropImage(movieDetails?.backdropPath)
         }
         cell.loadCelldata(movieDetails)
+        cell.delegate = viewModel
         return cell
     }
     

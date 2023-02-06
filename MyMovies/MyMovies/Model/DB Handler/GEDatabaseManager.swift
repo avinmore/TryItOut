@@ -24,4 +24,7 @@ class GEDatabaseManager {
         }
     }
     
+    func updateFavoriteStatus(_ id: Int) -> FavoriteStatus {
+        GEDatabaseWorker.shared.updateFavoriteStatus(id)
+    }
 }
