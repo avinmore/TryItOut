@@ -16,6 +16,7 @@ class GEFavoritesMoviesViewController: GEMoviesBaseViewController {
         collectionView = setupCollectionView(self)
         collectionView.dataSource = self
         viewModel.delegate = self
+        title = "Favorites"
     }
     
     override func viewWillAppear(_ animated: Bool) {

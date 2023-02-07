@@ -21,7 +21,7 @@ class GEMoviesSerachViewController: GEMoviesBaseViewController {
         setupSearchBar()
         viewModel.delegate = self
         viewModel.setupDataSync()
-        //viewModel.fetchData()
+        title = "Search"
     }
     
     func setupDataSource() {

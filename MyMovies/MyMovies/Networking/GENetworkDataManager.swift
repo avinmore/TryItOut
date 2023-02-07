@@ -43,13 +43,12 @@ class GENetworkDataManager {
                 guard let response = self.responseParser(data, responseType: T.self) else {
                     return promis(.failure(GEAPIError.invalidResponse))
                 }
-                debugPrint("### COUNT: \((response as? Movies)?.results.count ?? 0)")
                 let category = self.fatchCategory(requestType)
                 GEDatabaseManager.shared.saveData(response, category: category) {
                     cancellable.cancel()
                     return promis(.success(true))
                 }
-            }//.store(in: &self.cancellables)
+            } //.store(in: &self.cancellables)
         }
     }
     

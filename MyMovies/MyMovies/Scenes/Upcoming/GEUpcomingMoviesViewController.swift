@@ -40,18 +40,6 @@ class GEUpcomingMoviesViewController: GEMoviesBaseViewController {
     
 }
 extension GEUpcomingMoviesViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return viewModel.numberOfItemInSections(section)
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
-//            assertionFailure()
-//            return UICollectionViewCell()
-//        }
-//        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
-//        return cell
-//    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = self.viewModel.movieData[indexPath.row]
@@ -67,9 +55,6 @@ extension GEUpcomingMoviesViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        if isCollectionViewAtEnd(collectionView: collectionView) {
-//            viewModel.fetchData()
-//        }
         let totalItemCount = self.viewModel.movieData.count
         if indexPath.row == totalItemCount - 5 {
             viewModel.fetchData()

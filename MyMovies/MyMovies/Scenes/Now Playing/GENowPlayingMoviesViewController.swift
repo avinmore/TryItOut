@@ -49,20 +49,6 @@ extension GENowPlayingMoviesViewController: GERefreshEventProtocol {
 }
 
 extension GENowPlayingMoviesViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return viewModel.numberOfItemInSections(section)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
-//            assertionFailure()
-//            return UICollectionViewCell()
-//        }
-//        let movie = viewModel.movieForIndexPath(indexPath)
-//        cell.loadCellData(movie)
-//        return cell
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let totalItemCount = self.viewModel.movieData.count
         if indexPath.row == totalItemCount - 5 {
