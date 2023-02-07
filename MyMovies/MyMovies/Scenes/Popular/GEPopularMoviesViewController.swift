@@ -16,13 +16,13 @@ class GEPopularMoviesViewController: GEMoviesBaseViewController {
         collectionView.dataSource = nil
         setupDataSource()
         viewModel.delegate = self
+        viewModel.setupDataSync()
+        viewModel.fetchData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         GEMovieBaseViewModel.currentCategory = MovieCategoryType.popular
-        viewModel.setupDataSync()
-        viewModel.fetchData()
     }
     
     func setupDataSource() {
@@ -50,10 +50,7 @@ extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectio
             assertionFailure()
             return UICollectionViewCell()
         }
-        
         cell.loadCellData(viewModel.popularMovieForIndexPath(indexPath))
-        //let movie = viewModel.popularMovieForIndexPath(indexPath)
-        //debugPrint("### \(movie?.is_popular)")
         return cell
     }
     
@@ -73,14 +70,5 @@ extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectio
 
 extension GEPopularMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-//          collectionView.reloadData()
-//        return
-//        collectionView.performBatchUpdates { [weak self] in
-//            guard let self = self else { return }
-//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-//        } completion: { completed in
-//            self.viewModel.updateIndexes.removeAll()
-//            debugPrint("")
-//        }
     }
 }

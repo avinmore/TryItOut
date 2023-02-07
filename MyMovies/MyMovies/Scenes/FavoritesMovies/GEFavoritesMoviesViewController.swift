@@ -16,7 +16,10 @@ class GEFavoritesMoviesViewController: GEMoviesBaseViewController {
         collectionView = setupCollectionView(self)
         collectionView.dataSource = self
         viewModel.delegate = self
-        //viewModel.setupDataSync()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         viewModel.fetchData()
     }
 }
@@ -42,12 +45,6 @@ extension GEFavoritesMoviesViewController: UICollectionViewDataSource, UICollect
 
 extension GEFavoritesMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.performBatchUpdates { [weak self] in
-            guard let self = self else { return }
-            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-        } completion: { completed in
-            self.viewModel.updateIndexes.removeAll()
-            debugPrint("")
-        }
+        collectionView.reloadData()
     }
 }

@@ -6,13 +6,12 @@
 //
 import UIKit
 
-class GEHomeTabBarView: UITabBarController {
+class GEHomeTabBarView: UITabBarController, UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTabbatAppearance()
         setupNavigationActionItems()
         setupTabbarViewControllers()
-        
     }
     
     private func setupTabbatAppearance() {

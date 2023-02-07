@@ -15,13 +15,13 @@ class GEUpcomingMoviesViewController: GEMoviesBaseViewController {
         collectionView = setupCollectionView(self)
         viewModel.delegate = self
         setupDataSource()
+        viewModel.setupDataSync()
+        viewModel.fetchData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         GEMovieBaseViewModel.currentCategory = MovieCategoryType.upcoming
-        viewModel.setupDataSync()
-        viewModel.fetchData()
     }
     
     func setupDataSource() {
@@ -33,29 +33,25 @@ class GEUpcomingMoviesViewController: GEMoviesBaseViewController {
                 return UICollectionViewCell()
             }
             let movie = self.viewModel.movieData[indexPath.row]
-            debugPrint("####\(movie.is_now_playing ?? false )")
             cell.loadCellData(movie)
             return cell
         })
     }
     
 }
-extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.numberOfItemInSections(section)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
-            assertionFailure()
-            return UICollectionViewCell()
-        }
-        
-        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
-//        let movie = viewModel.movieForIndexPath(indexPath)
-//        debugPrint("### \(movie?.is_upcoming)")
-        return cell
-    }
+extension GEUpcomingMoviesViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return viewModel.numberOfItemInSections(section)
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
+//            assertionFailure()
+//            return UICollectionViewCell()
+//        }
+//        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
+//        return cell
+//    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = self.viewModel.movieData[indexPath.row]
@@ -72,15 +68,6 @@ extension GEUpcomingMoviesViewController: UICollectionViewDataSource, UICollecti
 
 extension GEUpcomingMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-    //        collectionView.reloadData()
-    //        return
-//        collectionView.performBatchUpdates { [weak self] in
-//            guard let self = self else { return }
-//            self.collectionView.insertItems(at: self.viewModel.updateIndexes)
-//        } completion: { completed in
-//            self.viewModel.updateIndexes.removeAll()
-//            debugPrint("")
-//        }
     }
 }
 

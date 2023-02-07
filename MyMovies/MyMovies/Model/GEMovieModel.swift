@@ -62,6 +62,10 @@ extension GEMovie: Equatable {
     static func == (lhs: GEMovie, rhs: GEMovie) -> Bool {
         return lhs.id == rhs.id
     }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 //Move to other file

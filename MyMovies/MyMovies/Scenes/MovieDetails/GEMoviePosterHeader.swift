@@ -18,8 +18,7 @@ class GEMoviePosterHeader: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
-    
+
     lazy var imageView: UIImageView = {
         let iView = UIImageView()
         iView.contentMode = .scaleAspectFill
@@ -93,13 +92,6 @@ class GEMoviePosterHeader: UIView {
         imageViewBottom.isActive = true
         imageViewHeight = imageView.heightAnchor.constraint(equalTo: containerView.heightAnchor)
         imageViewHeight.isActive = true
-        
-        //posterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16).isActive = true
-        //posterImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 70).isActive = true
-        //posterImageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        //imageView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -107,8 +99,7 @@ class GEMoviePosterHeader: UIView {
         let offsetY = -(scrollView.contentOffset.y + scrollView.contentInset.top)
         containerView.clipsToBounds = offsetY <= 0
         imageViewBottom.constant = offsetY >= 0 ? 0 : -offsetY / 2
-        imageViewHeight.constant = max(offsetY + scrollView.contentInset.top, scrollView.contentInset.top)
-        
+        imageViewHeight.constant = max(offsetY + scrollView.contentInset.top, scrollView.contentInset.top)        
     }
     
 }

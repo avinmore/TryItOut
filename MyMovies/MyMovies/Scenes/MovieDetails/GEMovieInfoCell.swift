@@ -14,17 +14,16 @@ class GEMovieInfoCell: UITableViewCell {
     var delegate: GEMakeMoviefavorite?
     @IBOutlet weak var genre: UILabel!
     @IBOutlet weak var title: UILabel!
-    
     @IBOutlet weak var avgVote: UILabel!
     @IBOutlet weak var voteCount: UILabel!
     @IBOutlet weak var status: UILabel!
     @IBOutlet weak var releaseDate: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
-    
     @IBOutlet weak var overview: UILabel!
-    //backdrop, poster, title, tagline, overview, genre, release date (dd/mmm/yyyy), vote average, vote count, spoken languages and status in a user-friendly design
     @IBOutlet weak var languagesSpoken: UILabel!
+    
     var movie: GEMovieDetailModel?
+    
     func loadCelldata(_ movie: GEMovieDetailModel?) {
         guard let movie = movie else { return }
         self.movie = movie
@@ -55,7 +54,6 @@ class GEMovieInfoCell: UITableViewCell {
         case .none:
             print("na")
         }
-        
     }
 
     func formatDate(_ stringDate: String) -> String {

@@ -24,28 +24,16 @@ class GEMoviesSerachViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     func fetchData() {
         guard !movieName.isEmpty else { return }
         nextPage = currentPage + 1
-        
-        
         fetch(.query((movieName, nextPage)), Movies.self).sink { [weak self] completion in
             guard let self = self else { return }
             switch completion {
             case .finished:
                 self.currentPage = self.nextPage
-                DispatchQueue.main.async {
-                    self.updateDataSource()
-//                    do {
-//                        self.fetchMovieRequestController?.fetchRequest.predicate =
-//                        NSPredicate(format: "SELF.title BEGINSWITH[c] %@", self.movieName)
-//                        try self.fetchMovieRequestController?.performFetch()
-//                        self.delegate?.updateUI()
-//                    } catch {
-//                        print(error)
-//                    }
-                }
-                    
-                
             case .failure(let error):
                 print("failure \(error)")
+            }
+            DispatchQueue.main.async {
+                self.updateDataSource()
             }
         } receiveValue: { result in
             
@@ -53,17 +41,15 @@ class GEMoviesSerachViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     }
     
     func updateDataSource() {
-        fetchOwnData()
-        var snapshot = NSDiffableDataSourceSnapshot<Section, GEMovie>()
-        snapshot.appendSections([.first])
-        snapshot.appendItems(self.movieData)
-        dataSource.apply(snapshot)
+        GEDatabaseManager.shared.fetchAllMoviesWithQuery(self.movieName) { [weak self] movies in
+            DispatchQueue.main.async {
+                self?.movieData = movies
+                var snapshot = NSDiffableDataSourceSnapshot<Section, GEMovie>()
+                snapshot.appendSections([.first])
+                snapshot.appendItems(self?.movieData ?? [])
+                self?.dataSource?.apply(snapshot)
+            }
+        }
     }
-    
-    func fetchOwnData() {
-        movieData = GEDatabaseManager.shared.fetchAllMoviesWithQuery(self.movieName)
-    }
-    
-    
 }
 

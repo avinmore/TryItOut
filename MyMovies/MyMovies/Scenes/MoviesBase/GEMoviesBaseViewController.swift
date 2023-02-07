@@ -8,19 +8,16 @@
 import Foundation
 import UIKit
 class GEMoviesBaseViewController: UIViewController {
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
     }
     
-    func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate & UICollectionViewDataSource) -> UICollectionView {
+    func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate) -> UICollectionView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
         collectionView.backgroundColor = UIColor.white
         collectionView.register(CGMovieCollectionViewCell.self, forCellWithReuseIdentifier: "CGMovieCollectionViewCell")
         collectionView.frame = controller.view.frame
         collectionView.delegate = controller
-//        collectionView.dataSource = controller
         controller.view.addSubview(collectionView)
         // Add constraints
         collectionView.translatesAutoresizingMaskIntoConstraints = false

@@ -9,7 +9,11 @@ import Foundation
 class GEFavoritesMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     var favoriteMovies: [GEMovie] = []
     func fetchData() {
-        favoriteMovies = GEDatabaseManager.shared.fetchAllfavoritesMovies()
-        delegate?.updateUI()
+        GEDatabaseManager.shared.fetchAllfavoritesMovies(completion: { [weak self] movies in
+            DispatchQueue.main.async {
+                self?.favoriteMovies = movies
+                self?.delegate?.updateUI()
+            }
+        })
     }
 }

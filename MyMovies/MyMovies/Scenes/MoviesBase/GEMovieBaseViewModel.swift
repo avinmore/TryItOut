@@ -40,7 +40,7 @@ class GEMovieBaseViewModel: NSObject {
                 switch completion {
                 case .finished:
                     promis(.success(true))
-                case .failure(let _):
+                case .failure:
                     promis(.failure(GEAPIError.invalidResponse))
                 }
             } receiveValue: { result in
@@ -48,29 +48,18 @@ class GEMovieBaseViewModel: NSObject {
         }
     }
     
-    func fetchGenreData() {
-        GENetworkDataManager.shared.fetchDataRequest(.genre, responseType: GEGenreModel.self).sink { completion in
-            switch completion {
+    func fetchGenreData(completion: @escaping () -> Void) {
+        GENetworkDataManager.shared.fetchDataRequest(.genre, responseType: GEGenreModel.self).sink { isSuccess in
+            switch isSuccess {
             case .finished:
                 print("Finish")
             case .failure(let error):
                 print("failure \(error)")
             }
+            completion()
         } receiveValue: { result in
         }.store(in: &cancellablesObserver)
     }
-
-    
-//    func clearCache() {
-//        fetchMovieRequestController?.fetchRequest.predicate = nil
-//        fetchMovieRequestController?.fetchRequest.sortDescriptors = nil
-//        // Perform new fetch
-//        do {
-//            try fetchMovieRequestController?.performFetch()
-//        } catch {
-//            print(error)
-//        }
-//    }
     
     func numberOfItemInSections(_ section: Int) -> Int {
         return fetchMovieRequestController?.sections?[section].numberOfObjects ?? 0

@@ -42,8 +42,9 @@ class GENetworkDataManager {
                     return promis(.failure(GEAPIError.invalidResponse))
                 }
                 let category = self.fatchCategory(requestType)
-                GEDatabaseManager.shared.saveData(response, category: category)
-                return promis(.success(true))
+                GEDatabaseManager.shared.saveData(response, category: category) {
+                    return promis(.success(true))
+                }
             }.store(in: &self.cancellables)
         }
     }

@@ -21,11 +21,11 @@ class GEPopularMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
             switch completion {
             case .finished:
                 self.currentPage = self.nextPage
-                DispatchQueue.main.async {
-                    self.updateDataSource()
-                }
             case .failure(let error):
                 print("failure \(error)")
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.updateDataSource()
             }
         } receiveValue: { result in
             
@@ -33,15 +33,15 @@ class GEPopularMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     }
     
     func updateDataSource() {
-        fetchOwnData()
-        var snapshot = NSDiffableDataSourceSnapshot<Section, GEMovie>()
-        snapshot.appendSections([.first])
-        snapshot.appendItems(movieData)
-        dataSource.apply(snapshot)
-    }
-    
-    func fetchOwnData() {
-        movieData = GEDatabaseManager.shared.fetchAllMoviesWith("popular")
-        //debugPrint(movieData.count)
+        GEDatabaseManager.shared.fetchMoviesByCategoriesWith(MovieCategoryType.popular.rawValue) { movies in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return}
+                self.movieData = movies
+                var snapshot = NSDiffableDataSourceSnapshot<Section, GEMovie>()
+                snapshot.appendSections([.first])
+                snapshot.appendItems(self.movieData)
+                self.dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+            }
+        }
     }
 }

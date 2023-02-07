@@ -13,30 +13,34 @@ enum FavoriteStatus {
     case yetToFavorite
     case na
 }
+@propertyWrapper
+class Atomic <T> {
+    private let lock = NSLock.init()
+    private var object: T?
+    var wrappedValue: T? {
+        get {
+            lock.lock()
+            let ret = object
+            lock.unlock()
+            return ret
+        }
+        set {
+            lock.lock()
+            object = newValue
+            lock.unlock()
+        }
+    }
+}
 
 class GEDatabaseWorker {
     static let shared = GEDatabaseWorker()
     private init() {}
 //    var managedContext: NSManagedObjectContext?
-    
-    
-    
-    private let queue = DispatchQueue(label: "com.myapp.singletonQueue")
-    var managedContext: NSManagedObjectContext?
-    
+    let databaseQueue = DispatchQueue(label: "com.database.queue", qos: .userInteractive)
+    @Atomic var managedContext: NSManagedObjectContext?
     let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-    
-    
-//    var managedContext: NSManagedObjectContext? {
-//        get {
-//            return queue.sync { _managedContext }
-//        }
-//        set {
-//            queue.sync { _managedContext = newValue }
-//        }
-//    }
-    
     private var genres: [Genres] = []
+    
     func saveDatabase() {
         do {
             try self.privateMOC.save()
@@ -52,31 +56,38 @@ class GEDatabaseWorker {
         }
     }
 
-    func saveMovies(_ movies: Movies, category: String) {
-        if GEDatabaseWorker.shared.privateMOC.parent == nil {
-            GEDatabaseWorker.shared.privateMOC.parent = GEDatabaseWorker.shared.managedContext
-        }
-        guard let context = GEDatabaseWorker.shared.managedContext else { return }
-        if genres.isEmpty {
-            genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
-        }
-        privateMOC.perform {
+    func saveMovies(_ movies: Movies, category: String, completion:  @escaping () -> Void) {
+        
+        databaseQueue.async {
             
+            
+            
+            if GEDatabaseWorker.shared.privateMOC.parent == nil {
+                GEDatabaseWorker.shared.privateMOC.parent = GEDatabaseWorker.shared.managedContext
+            }
+            
+            if self.genres.isEmpty {
+                self.genres = GEDatabaseWorker.shared.fetchGenre().map { $0.toGenre() }
+            }
+            //privateMOC.perform {
+            guard let context = GEDatabaseWorker.shared.managedContext else { return }
             for movie in movies.results {
                 let fetchMoviesRequest = Movie.fetchRequest()
                 fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
                 do {
-                    if let existing = try? context.fetch(fetchMoviesRequest),
-                       let existingObject = existing.first {
+                    let existing = try context.fetch(fetchMoviesRequest)
+                    if let existingObject = existing.first {
                         existingObject.is_popular = existingObject.is_popular ? existingObject.is_popular : category == MovieCategoryType.popular.rawValue
                         existingObject.is_upcoming = existingObject.is_upcoming ? existingObject.is_upcoming : category == MovieCategoryType.upcoming.rawValue
                         existingObject.is_top_rated = existingObject.is_top_rated ? existingObject.is_top_rated : category == MovieCategoryType.top_rated.rawValue
                         existingObject.is_now_playing = existingObject.is_now_playing ? existingObject.is_now_playing : category == MovieCategoryType.now_playing.rawValue
                         existingObject.dateAdded = Date()
-                        
+                        self.saveData(context)
                         continue
                     }
-                } catch {}
+                } catch {
+                    debugPrint("!!! FIX ME !!! \(error)")
+                }
                 
                 let manageObject = Movie(context: context)
                 manageObject.genre_ids = movie.genreIDS?.data
@@ -85,7 +96,7 @@ class GEDatabaseWorker {
                 manageObject.adult = movie.adult
                 manageObject.original_title = movie.originalTitle
                 manageObject.overview = movie.overview
-                manageObject.popularity = movie.popularity ?? 0
+                manageObject.popularity = Date().timeIntervalSince1970 // movie.popularity ?? 0
                 manageObject.poster_path = movie.posterPath
                 manageObject.release_date = movie.releaseDate
                 manageObject.title = movie.title
@@ -102,9 +113,11 @@ class GEDatabaseWorker {
                 let moviecategory = MovieCategory(context: context)
                 moviecategory.id = Int64(movie.id)
                 moviecategory.type = category
-                //saveData(context)
+                self.saveData(context)
             }//for
-            self.saveDatabase()
+            self.saveData(context)
+            completion()
+            //}
         }
     }
     
@@ -112,7 +125,7 @@ class GEDatabaseWorker {
         return genres.first(where: { $0.id == id })?.name ?? ""
     }
     
-    func saveMovieDetails(_ movieDetail: GEMovieDetailModel) {
+    func saveMovieDetails(_ movieDetail: GEMovieDetailModel, completion:  @escaping () -> Void) {
         guard let context = GEDatabaseWorker.shared.managedContext else { return }
         let fetchMoviesRequest = MovieDetail.fetchRequest()
         var manageObject = MovieDetail(context: context)
@@ -123,10 +136,7 @@ class GEDatabaseWorker {
                 if let movieDet = movies.first {
                     manageObject = movieDet
                 }
-            } catch {
-                // print("Could not fetch. \(error), \(error.userInfo)")
-            }
-            
+            } catch { }
         }
         
         manageObject.adult = movieDetail.adult ?? true
@@ -152,28 +162,34 @@ class GEDatabaseWorker {
         manageObject.vote_average = movieDetail.voteAverage ?? 0
         manageObject.vote_count = Int64(movieDetail.voteCount ?? 0)
         saveData(context)
+        completion()
     }
     
-    func deleteAllGenre() {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return }
-        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: Genre.fetchRequest())
-        do {
-            try context.execute(batchDeleteRequest)
-        } catch {
-            // handle error
+    func deleteAllGenre(completion:  @escaping () -> Void) {
+        databaseQueue.async {
+            guard let context = GEDatabaseWorker.shared.managedContext else { return }
+            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: Genre.fetchRequest())
+            do {
+                try context.execute(batchDeleteRequest)
+            } catch { }
+            self.saveData(context)
+            completion()
         }
-        saveData(context)
     }
     
-    func saveGenre(_ genres: GEGenreModel) {
-        deleteAllGenre()
-        guard let context = GEDatabaseWorker.shared.managedContext else { return }
-        for genre in genres.genres {
-            let manageObject = Genre(context: context)
-            manageObject.id = Int64(genre.id)
-            manageObject.name = genre.name
+    func saveGenre(_ genres: GEGenreModel, completion:  @escaping () -> Void) {
+        databaseQueue.async {
+            self.deleteAllGenre {
+                guard let context = GEDatabaseWorker.shared.managedContext else { return }
+                for genre in genres.genres {
+                    let manageObject = Genre(context: context)
+                    manageObject.id = Int64(genre.id)
+                    manageObject.name = genre.name
+                }
+                self.saveData(context)
+                completion()
+            }
         }
-        saveData(context)
     }
     
     func updateFavoriteStatus(_ id: Int) -> FavoriteStatus  {
@@ -191,70 +207,76 @@ class GEDatabaseWorker {
                 manageObject.id = Int64(id)
                 status = .favorite
             }
-        } catch  {
-            // print("Could not fetch. \(error), \(error.userInfo)")
-        }
+        } catch  {}
         saveData(context)
         return status
     }
     
-    func fetchAllfavoritesMovies() -> [Movie] {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
+    func fetchAllfavoritesMovies(completion: @escaping ([Movie]) -> Void) {
         let fetchMoviesRequest = FavoriteMovies.fetchRequest()
         do {
-            let allfavoriteMovieIds = try context.fetch(fetchMoviesRequest)
-            return fetchfavoriteMovies( allfavoriteMovieIds.map({ Int($0.id) }))
-        } catch  {
-            // print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        return  []
-    }
-    
-    func fetchfavoriteMovies(_ ids: [Int]) -> [Movie] {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
-        let fetchMoviesRequest = Movie.fetchRequest()
-        let predicate = NSPredicate(format: "id IN %@", ids)
-        let sort = NSSortDescriptor(key: "dateAdded", ascending: true)
-        fetchMoviesRequest.sortDescriptors = [sort]
-        fetchMoviesRequest.predicate = predicate
-        do {
-            let movies = try context.fetch(fetchMoviesRequest)
-            return movies
-        } catch {
-            // print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        return  []
-    }
-    
-    func fetchMoviesByCategories( category: String) -> [Movie] {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
-        let fetchMoviesRequest = MovieCategory.fetchRequest()
-        let predicate = NSPredicate(format: "type = %@", category)
-        fetchMoviesRequest.predicate = predicate
-        do {
-            if let movies = try? context.fetch(fetchMoviesRequest) {
-                let ids = Array(Set(Set( movies.map({ Int($0.id) } ) )))
-                let categoryMovies = fetchfavoriteMovies(ids)
-                return categoryMovies
+            let allfavoriteMovieIds = try GEDatabaseWorker.shared.managedContext?.fetch(fetchMoviesRequest) ?? []
+            fetchfavoriteMoviesWith(allfavoriteMovieIds.map({ Int($0.id) })) { movies in
+                completion(movies)
             }
-        } catch {
-            // print("Could not fetch. \(error), \(error.userInfo)")
+        } catch  {
+            return completion([])
         }
-        return []
+        
     }
     
-    func fetchMoviesQuery(_ query: String) -> [Movie] {
-        guard let context = GEDatabaseWorker.shared.managedContext else { return [] }
-        let fetchMoviesRequest = Movie.fetchRequest()
-        let predicate = NSPredicate(format: "SELF.title BEGINSWITH[c] %@", query)
-        fetchMoviesRequest.predicate = predicate
-        do {
-            let movies = try context.fetch(fetchMoviesRequest)
-            return movies
-        } catch {
-            // print("Could not fetch. \(error), \(error.userInfo)")
+    func fetchfavoriteMoviesWith(_ ids: [Int], completion: @escaping ([Movie]) -> Void) {
+        databaseQueue.async {
+            let fetchMoviesRequest = Movie.fetchRequest()
+            let predicate = NSPredicate(format: "id IN %@", ids)
+            let sort = NSSortDescriptor(key: "popularity", ascending: true)
+            fetchMoviesRequest.sortDescriptors = [sort]
+            fetchMoviesRequest.predicate = predicate
+            do {
+                let movies = try GEDatabaseWorker.shared.managedContext?.fetch(fetchMoviesRequest) ?? []
+                completion(movies)
+                return
+            } catch {
+                return completion([])
+            }
         }
-        return  []
+        
+    }
+    
+    func fetchMoviesByCategoriesWith(category: String, completion: @escaping ([Movie]) -> Void) {
+        databaseQueue.async {
+            let fetchMoviesRequest = MovieCategory.fetchRequest()
+            let predicate = NSPredicate(format: "type = %@", category)
+            fetchMoviesRequest.predicate = predicate
+            do {
+                if let movies = try GEDatabaseWorker.shared.managedContext?.fetch(fetchMoviesRequest) {
+                    let ids = Array(Set(Set( movies.map({ Int($0.id) } ) )))
+                    self.fetchfavoriteMoviesWith(ids) { movies in
+                        completion(movies)
+                        return
+                    }
+                } else {
+                    return completion([])
+                }
+            } catch {
+                return completion([])
+            }
+        }
+    }
+
+    func fetchMoviesQuery(_ query: String, completion: @escaping ([Movie]) -> Void) {
+        databaseQueue.async {
+            guard let context = GEDatabaseWorker.shared.managedContext else { return completion([]) }
+            let fetchMoviesRequest = Movie.fetchRequest()
+            let predicate = NSPredicate(format: "SELF.title BEGINSWITH[c] %@", query)
+            fetchMoviesRequest.predicate = predicate
+            do {
+                let movies = try context.fetch(fetchMoviesRequest)
+                completion(movies)
+            } catch {
+                return completion([])
+            }
+        }
     }
         
     func fetchGenre() -> [Genre] {
@@ -264,7 +286,6 @@ class GEDatabaseWorker {
             let genres = try context.fetch(fetchGenreRequest)
             return genres
         } catch {
-//            print("Could not fetch. \(error), \(error.userInfo)")
             return []
         }
     }
@@ -276,10 +297,8 @@ class GEDatabaseWorker {
             if error.domain == NSCocoaErrorDomain && error.code == 133021 {
                 print("## Duplicate detected")
             }
-            //print("Could not save. \(error), \(error.userInfo)")
         }
     }
-    
 }
 
 //Helpers

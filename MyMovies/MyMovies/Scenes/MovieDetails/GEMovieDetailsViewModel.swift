@@ -28,7 +28,6 @@ class GEMovieDetailsViewModel: GEMovieBaseViewModel, GEFetchMovieData {
                     try? self.fetchMovieDetailsRequestController?.performFetch()
                     self.delegate?.updateUI()
                 }
-                //print("finished")
             case .failure(let error):
                 print("failure \(error)")
             }

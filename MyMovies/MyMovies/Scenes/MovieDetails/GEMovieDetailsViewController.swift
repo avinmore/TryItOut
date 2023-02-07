@@ -10,9 +10,14 @@ import UIKit
 class GEMovieDetailsViewController: GEMoviesBaseViewController {
     @IBOutlet weak var tableView: UITableView!
     let viewModel = GEMovieDetailsViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.delegate = self
+        setupHeader()
+    }
+    
+    func setupHeader() {
         viewModel.setupMovieDetailDataSync()
         let header = GEMoviePosterHeader(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.width * 0.5))
         tableView.tableHeaderView = header
