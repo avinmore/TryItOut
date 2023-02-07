@@ -40,6 +40,12 @@ class GEMoviesSerachViewController: GEMoviesBaseViewController {
     
     func setupSearchBar() {
         navigationItem.titleView = searchController.searchBar
+        searchController.searchBar.tintColor = .white
+        let textFieldInsideSearchBar = searchController.searchBar.value(forKey: "searchField") as? UITextField
+        textFieldInsideSearchBar?.textColor = .white
+        let imageView = textFieldInsideSearchBar?.leftView as? UIImageView
+        imageView?.image = imageView?.image?.withRenderingMode(.alwaysTemplate)
+        imageView?.tintColor = .white
         self.searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
     }

@@ -58,7 +58,18 @@ extension GEUpcomingMoviesViewController: UICollectionViewDelegate {
         navigateToMovieDetails(movie.id)
     }
     
+    func isCollectionViewAtEnd(collectionView: UICollectionView) -> Bool {
+        let offset = collectionView.contentOffset.y
+        let bounds = collectionView.bounds.size.height
+        let contentSize = collectionView.contentSize.height
+        let result = offset + bounds >= contentSize
+        return result
+    }
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        if isCollectionViewAtEnd(collectionView: collectionView) {
+//            viewModel.fetchData()
+//        }
         let totalItemCount = self.viewModel.movieData.count
         if indexPath.row == totalItemCount - 5 {
             viewModel.fetchData()

@@ -21,11 +21,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     fileprivate func createNavController(for rootViewController: UIViewController,
                                          title: String) -> UIViewController {
-           let navController = UINavigationController(rootViewController: rootViewController)
-           navController.tabBarItem.title = title
-           navController.navigationBar.prefersLargeTitles = true
-           rootViewController.navigationItem.title = title
-           return navController
+        let navController = UINavigationController(rootViewController: rootViewController)
+        navController.tabBarItem.title = title
+        navController.navigationBar.prefersLargeTitles = true
+        rootViewController.navigationItem.title = title
+        navController.navigationBar.barTintColor = .black
+        let textAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.red
+        ]
+        navController.navigationBar.largeTitleTextAttributes = textAttributes
+        navController.navigationBar.titleTextAttributes = textAttributes
+        
+        return navController
     }
     
     func setupDatabaseContext() {

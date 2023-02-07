@@ -41,20 +41,6 @@ class GEDatabaseWorker {
     let privateMOC = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
     private var genres: [Genres] = []
     
-    func saveDatabase() {
-        do {
-            try self.privateMOC.save()
-            GEDatabaseWorker.shared.managedContext?.performAndWait {
-                do {
-                    try GEDatabaseWorker.shared.managedContext?.save()
-                } catch {
-                    fatalError("Failure to save context: \(error)")
-                }
-            }
-        } catch {
-            fatalError("Failure to save context: \(error)")
-        }
-    }
 
     func saveMovies(_ movies: Movies, category: String, completion:  @escaping () -> Void) {
         
@@ -71,8 +57,8 @@ class GEDatabaseWorker {
             }
             //privateMOC.perform {
             guard let context = GEDatabaseWorker.shared.managedContext else { return }
+            let fetchMoviesRequest = Movie.fetchRequest()
             for movie in movies.results {
-                let fetchMoviesRequest = Movie.fetchRequest()
                 fetchMoviesRequest.predicate = NSPredicate(format: "id == \(movie.id)")
                 do {
                     let existing = try context.fetch(fetchMoviesRequest)
@@ -82,7 +68,6 @@ class GEDatabaseWorker {
                         existingObject.is_top_rated = existingObject.is_top_rated ? existingObject.is_top_rated : category == MovieCategoryType.top_rated.rawValue
                         existingObject.is_now_playing = existingObject.is_now_playing ? existingObject.is_now_playing : category == MovieCategoryType.now_playing.rawValue
                         existingObject.dateAdded = Date()
-                        //self.saveData(context)
                         continue
                     }
                 } catch {
@@ -250,7 +235,7 @@ class GEDatabaseWorker {
             fetchMoviesRequest.predicate = predicate
             do {
                 if let movies = try GEDatabaseWorker.shared.managedContext?.fetch(fetchMoviesRequest) {
-                    let ids = Array(Set(Set( movies.map({ Int($0.id) } ) )))
+                    let ids = movies.map { Int($0.id) }
                     self.fetchfavoriteMoviesWith(ids) { movies in
                         completion(movies)
                         return

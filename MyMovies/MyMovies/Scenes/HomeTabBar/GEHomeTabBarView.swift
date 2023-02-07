@@ -16,27 +16,31 @@ class GEHomeTabBarView: UITabBarController, UITabBarControllerDelegate {
     
     private func setupTabbatAppearance() {
         view.backgroundColor = .white
-        UITabBar.appearance().backgroundColor = .systemBackground
-        UITabBar.appearance().barTintColor = .systemBackground
-        tabBar.tintColor = .label
+        UITabBar.appearance().backgroundColor = .black
+        UITabBar.appearance().barTintColor = .black
+        //tabBar.tintColor = .black
     }
     
     private func setupTabbarViewControllers() {
         let nowPlaying = GENowPlayingMoviesViewController()
         let nowPlayingTabBarItem = UITabBarItem(title: "Now Playing", image: UIImage(named: "now-playing"), tag: 0)
         nowPlaying.tabBarItem = nowPlayingTabBarItem
+        setTabBarItemTextColor(nowPlayingTabBarItem)
         
         let popular = GEPopularMoviesViewController()
         let secondTabBarItem = UITabBarItem(title: "Popular", image: UIImage(named: "popular"), tag: 1)
         popular.tabBarItem = secondTabBarItem
+        setTabBarItemTextColor(secondTabBarItem)
         
         let toprated = GETopRatedMoviesViewController()
         let topratedTabBarItem = UITabBarItem(title: "Top Rated", image: UIImage(named: "top-rated"), tag: 2)
         toprated.tabBarItem = topratedTabBarItem
+        setTabBarItemTextColor(topratedTabBarItem)
         
         let upcoming = GEUpcomingMoviesViewController()
         let upcomingTabBarItem = UITabBarItem(title: "Upcoming", image: UIImage(named: "upcoming"), tag: 3)
         upcoming.tabBarItem = upcomingTabBarItem
+        setTabBarItemTextColor(upcomingTabBarItem)
         viewControllers = [ nowPlaying,
                             popular,
                             toprated,
@@ -44,10 +48,21 @@ class GEHomeTabBarView: UITabBarController, UITabBarControllerDelegate {
         ]
     }
     
+    func setTabBarItemTextColor(_ tabBar: UITabBarItem) {
+        let normalTabBarAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.white
+        ]
+        let selectedTabBarAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.red
+        ]
+        tabBar.setTitleTextAttributes(normalTabBarAttributes, for: .normal)
+        tabBar.setTitleTextAttributes(selectedTabBarAttributes, for: .selected)
+    }
+    
     private func setupNavigationActionItems() {
         //Serach nav item
         let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchTapped))
-        search.tintColor = .black
+        search.tintColor = .red
         navigationItem.rightBarButtonItem = search
         
         //Fav nav item

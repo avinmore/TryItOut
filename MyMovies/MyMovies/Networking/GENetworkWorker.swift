@@ -33,22 +33,25 @@ class GENetworkWorker {
     static let shared = GENetworkWorker()
     private init() {}
     private let environment = APIEnvironment.development
+    let networkQueue = DispatchQueue(label: "com.network.queue", qos: .utility)
     
     func makeRequest(query: String) -> Future<Data?, Error> {
-        
         guard let url = URL(string: environment.baseURL + query + environment.apiKeyParam) else {
             return Future { promis in
                 promis(.failure(GEAPIError.invalidURL))
             }
         }
+        debugPrint("### \(url)")
         return Future { promis in
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                guard let data = data, error == nil else {
-                    return promis(.failure(GEAPIError.invalidResponse))
-                    
-                }
-                promis(.success(data))
-            }.resume()
+            self.networkQueue.async {
+                URLSession.shared.dataTask(with: url) { data, response, error in
+                    guard let data = data, error == nil else {
+                        return promis(.failure(GEAPIError.invalidResponse))
+                    }
+                    promis(.success(data))
+                }.resume()
+            }
+            
         }
     }
 }

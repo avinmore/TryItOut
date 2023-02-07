@@ -37,7 +37,8 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         
         layer.cornerRadius = 5
         clipsToBounds = true
-        
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = 0.2
         moviewImageView.contentMode = .scaleToFill
         
         stackView.addArrangedSubview(moviewImageView)
@@ -61,14 +62,10 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         title.font = UIFont.boldSystemFont(ofSize: 14)
         title.numberOfLines = 2
         title.textColor = .white
+        title.textAlignment = .center
         title.adjustsFontSizeToFitWidth = true
         title.lineBreakMode = .byWordWrapping
         titleView.addArrangedSubview(title)
-//        title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-//        title.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
-//        title.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
-
-        
         
         //Top label config
         voteAvgStack.axis = .horizontal

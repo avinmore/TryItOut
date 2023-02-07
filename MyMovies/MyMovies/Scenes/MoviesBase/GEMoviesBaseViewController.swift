@@ -10,6 +10,7 @@ import UIKit
 class GEMoviesBaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.tintColor = .red
     }
     
     func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate) -> UICollectionView {
@@ -19,6 +20,7 @@ class GEMoviesBaseViewController: UIViewController {
         collectionView.frame = controller.view.frame
         collectionView.delegate = controller
         controller.view.addSubview(collectionView)
+        collectionView.backgroundColor = .black
         // Add constraints
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

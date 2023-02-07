@@ -28,7 +28,9 @@ class GENetworkDataManager {
                 return promis(.failure(GEAPIError.invalidURL))
             }
             let query = self.prepareQuery(requestType)
-            GENetworkWorker.shared.makeRequest(query: query).sink { completion in
+            var cancellable = AnyCancellable({})
+            cancellable = GENetworkWorker.shared.makeRequest(query: query)
+                .sink { completion in
                 switch completion {
                 case .finished:break
                     //print("Finish")
@@ -41,11 +43,13 @@ class GENetworkDataManager {
                 guard let response = self.responseParser(data, responseType: T.self) else {
                     return promis(.failure(GEAPIError.invalidResponse))
                 }
+                debugPrint("### COUNT: \((response as? Movies)?.results.count ?? 0)")
                 let category = self.fatchCategory(requestType)
                 GEDatabaseManager.shared.saveData(response, category: category) {
+                    cancellable.cancel()
                     return promis(.success(true))
                 }
-            }.store(in: &self.cancellables)
+            }//.store(in: &self.cancellables)
         }
     }
     
