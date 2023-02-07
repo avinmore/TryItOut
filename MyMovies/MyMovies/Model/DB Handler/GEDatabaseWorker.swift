@@ -82,7 +82,7 @@ class GEDatabaseWorker {
                         existingObject.is_top_rated = existingObject.is_top_rated ? existingObject.is_top_rated : category == MovieCategoryType.top_rated.rawValue
                         existingObject.is_now_playing = existingObject.is_now_playing ? existingObject.is_now_playing : category == MovieCategoryType.now_playing.rawValue
                         existingObject.dateAdded = Date()
-                        self.saveData(context)
+                        //self.saveData(context)
                         continue
                     }
                 } catch {

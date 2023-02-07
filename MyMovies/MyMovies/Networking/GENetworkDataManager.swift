@@ -30,8 +30,8 @@ class GENetworkDataManager {
             let query = self.prepareQuery(requestType)
             GENetworkWorker.shared.makeRequest(query: query).sink { completion in
                 switch completion {
-                case .finished:
-                    print("Finish")
+                case .finished:break
+                    //print("Finish")
                 case .failure(let error):
                     print("failure \(error)")
                     return promis(.failure(error))

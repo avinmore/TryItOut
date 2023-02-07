@@ -56,9 +56,6 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         titleView.backgroundColor = .black
         stackView.addArrangedSubview(titleView)
         
-//        titleView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-//        titleView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
-//        titleView.rightAnchor.constraint(equalTo: rightAnchor, constant: -8).isActive = true
         titleView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         title.font = UIFont.boldSystemFont(ofSize: 14)
@@ -67,9 +64,9 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         title.adjustsFontSizeToFitWidth = true
         title.lineBreakMode = .byWordWrapping
         titleView.addArrangedSubview(title)
-        title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-        title.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
-        title.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
+//        title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
+//        title.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
+//        title.rightAnchor.constraint(equalTo: rightAnchor, constant: 0).isActive = true
 
         
         

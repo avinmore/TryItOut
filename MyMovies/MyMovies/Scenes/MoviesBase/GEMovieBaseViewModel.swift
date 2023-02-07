@@ -51,8 +51,8 @@ class GEMovieBaseViewModel: NSObject {
     func fetchGenreData(completion: @escaping () -> Void) {
         GENetworkDataManager.shared.fetchDataRequest(.genre, responseType: GEGenreModel.self).sink { isSuccess in
             switch isSuccess {
-            case .finished:
-                print("Finish")
+            case .finished: break
+                //print("Finish")
             case .failure(let error):
                 print("failure \(error)")
             }
