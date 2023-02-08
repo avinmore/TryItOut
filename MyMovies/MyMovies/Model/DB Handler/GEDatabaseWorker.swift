@@ -81,7 +81,8 @@ class GEDatabaseWorker {
             manageObject.adult = movie.adult
             manageObject.original_title = movie.originalTitle
             manageObject.overview = movie.overview
-            manageObject.popularity = Date().timeIntervalSince1970 // movie.popularity ?? 0
+            manageObject.popularity = movie.popularity ?? 0
+            manageObject.timestamp = Date().timeIntervalSince1970
             manageObject.poster_path = movie.posterPath
             manageObject.release_date = movie.releaseDate
             manageObject.title = movie.title
@@ -206,7 +207,7 @@ class GEDatabaseWorker {
     func fetchfavoriteMoviesWith(_ ids: [Int], completion: @escaping ([Movie]) -> Void) {
         let fetchMoviesRequest = Movie.fetchRequest()
         let predicate = NSPredicate(format: "id IN %@", ids)
-        let sort = NSSortDescriptor(key: "popularity", ascending: true)
+        let sort = NSSortDescriptor(key: "timestamp", ascending: true)
         fetchMoviesRequest.sortDescriptors = [sort]
         fetchMoviesRequest.predicate = predicate
         do {
