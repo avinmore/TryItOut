@@ -47,6 +47,12 @@ class GENetworkWorker {
         }
         //debugPrint("### \(url)")
         return Future { promis in
+            
+            guard Reachability.isConnectedToNetwork() else {
+                MyMoviesUtils.showToast("Please check your internet connection is connected and try again!", duration: 4)
+                return promis(.failure(GEAPIError.invalidResponse))
+            }
+            
             self.networkQueue.async {
                 URLSession.shared.dataTask(with: url) { data, response, error in
                     guard let data = data, error == nil else {

@@ -79,6 +79,10 @@ class GEMoviesBaseViewController: UIViewController {
     
     func navigateToMovieDetails(_ movieId: Int?) {
         guard let id = movieId else { return }
+        guard Reachability.isConnectedToNetwork() else {
+            MyMoviesUtils.showToast("Please check your internet connection is connected and try again!", duration: 4)
+            return
+        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         guard let movieDetailsViewController = storyboard.instantiateViewController(withIdentifier: "GEMovieDetailsViewController") as? GEMovieDetailsViewController else { return }
         movieDetailsViewController.viewModel.movieId = id
