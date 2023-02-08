@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+
 enum GEAPIRequestType<I, S> {
     case nowPlaying(I)
     case popular(I)
@@ -39,14 +40,17 @@ class GENetworkDataManager {
                     return promis(.failure(error))
                 }
             } receiveValue: { data in
-                guard let data = data else { return promis(.failure(GEAPIError.invalidResponse)) }
-                guard let response = self.responseParser(data, responseType: T.self) else {
-                    return promis(.failure(GEAPIError.invalidResponse))
-                }
-                let category = self.fatchCategory(requestType)
-                GEDatabaseManager.shared.saveData(response, category: category) {
-                    cancellable.cancel()
-                    return promis(.success(true))
+                DispatchQueue.main.async {
+                    guard let data = data else { return promis(.failure(GEAPIError.invalidResponse)) }
+                    guard let response = self.responseParser(data, responseType: T.self) else {
+                        return promis(.failure(GEAPIError.invalidResponse))
+                    }
+                    //debugPrint("### new objects \( (response as? Movies)?.results.count ?? 0) ")
+                    let category = self.fatchCategory(requestType)
+                    GEDatabaseManager.shared.saveData(response, category: category) {
+                        cancellable.cancel()
+                        return promis(.success(true))
+                    }
                 }
             } //.store(in: &self.cancellables)
         }
@@ -105,10 +109,3 @@ class GENetworkDataManager {
     }
     
 }
-
-
-//https://api.themoviedb.org/3/movie/now_playing?page=1
-//https://api.themoviedb.org/3/movie/popular?page=1
-//https://api.themoviedb.org/3/movie/top_rated?page=1
-//https://api.themoviedb.org/3/movie/upcoming?page=1
-//https://api.themoviedb.org/3/search/movie?query={query}&page=1

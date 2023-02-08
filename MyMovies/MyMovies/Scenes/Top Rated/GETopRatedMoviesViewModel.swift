@@ -12,7 +12,8 @@ class GETopRatedMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     private var cancellables = Set<AnyCancellable>()
     var currentPage = 0
     var nextPage = 1
-    var movieData: [GEMovie] = []    
+    var movieData: [GEMovie] = []
+    var isRefreshing = false
     var dataSource: UICollectionViewDiffableDataSource<Section, GEMovie>!
     func fetchData() {
         nextPage = currentPage + 1
@@ -40,6 +41,7 @@ class GETopRatedMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
                 snapshot.appendSections([.first])
                 snapshot.appendItems(self.movieData)
                 self.dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+                self.isRefreshing = false
             }
         }
     }

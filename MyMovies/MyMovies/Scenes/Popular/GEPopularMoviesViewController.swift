@@ -9,17 +9,14 @@ import UIKit
 class GEPopularMoviesViewController: GEMoviesBaseViewController {
     lazy var viewModel = GEPopularMoviesViewModel()
     var collectionView: UICollectionView!
-    
+    let refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
-        collectionView.dataSource = nil
         setupDataSource()
-        viewModel.delegate = self
-        viewModel.setupDataSync()
         viewModel.fetchData()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         GEMovieBaseViewModel.currentCategory = MovieCategoryType.popular
@@ -40,35 +37,24 @@ class GEPopularMoviesViewController: GEMoviesBaseViewController {
     }
 }
 
-extension GEPopularMoviesViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.pupularNumberOfItemInSections(section)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
-            assertionFailure()
-            return UICollectionViewCell()
-        }
-        cell.loadCellData(viewModel.popularMovieForIndexPath(indexPath))
-        return cell
-    }
+extension GEPopularMoviesViewController: UICollectionViewDelegate, UIScrollViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = self.viewModel.movieData[indexPath.row]
         navigateToMovieDetails(movie.id)
     }
-
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let totalItemCount = self.viewModel.movieData.count
-        if indexPath.row == totalItemCount - 5 {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let diffHeight = contentHeight - contentOffsetY
+        let frameHeight = scrollView.bounds.size.height
+        let pullHeight  = abs(diffHeight - frameHeight)
+        debugPrint("@@ \(pullHeight)")
+        if pullHeight < 200.0 && !viewModel.isRefreshing {
+            viewModel.isRefreshing = true
             viewModel.fetchData()
         }
     }
-    
 }
 
-extension GEPopularMoviesViewController: GERefreshEventProtocol {
-    func updateUI() {
-    }
-}

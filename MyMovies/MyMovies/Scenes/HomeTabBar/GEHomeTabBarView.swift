@@ -15,10 +15,9 @@ class GEHomeTabBarView: UITabBarController, UITabBarControllerDelegate {
     }
     
     private func setupTabbatAppearance() {
-        view.backgroundColor = .white
-        UITabBar.appearance().backgroundColor = .black
-        UITabBar.appearance().barTintColor = .black
-        //tabBar.tintColor = .black
+        //view.backgroundColor = .white
+        UITabBar.appearance().backgroundColor = ThemeManager.barTintColor
+        UITabBar.appearance().barTintColor = ThemeManager.barTintColor
     }
     
     private func setupTabbarViewControllers() {
@@ -50,10 +49,10 @@ class GEHomeTabBarView: UITabBarController, UITabBarControllerDelegate {
     
     func setTabBarItemTextColor(_ tabBar: UITabBarItem) {
         let normalTabBarAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.white
+            NSAttributedString.Key.foregroundColor: ThemeManager.tabBarUnSelectedTextColor
         ]
         let selectedTabBarAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.red
+            NSAttributedString.Key.foregroundColor: ThemeManager.tabBarSelectedTextColor
         ]
         tabBar.setTitleTextAttributes(normalTabBarAttributes, for: .normal)
         tabBar.setTitleTextAttributes(selectedTabBarAttributes, for: .selected)
@@ -62,7 +61,7 @@ class GEHomeTabBarView: UITabBarController, UITabBarControllerDelegate {
     private func setupNavigationActionItems() {
         //Serach nav item
         let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchTapped))
-        search.tintColor = .red
+        search.tintColor = ThemeManager.navTintColor
         navigationItem.rightBarButtonItem = search
         
         //Fav nav item

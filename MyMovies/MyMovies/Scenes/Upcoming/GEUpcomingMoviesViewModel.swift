@@ -12,6 +12,7 @@ class GEUpcomingMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     var currentPage = 0
     var nextPage = 1
     var movieData: [GEMovie] = []
+    var isRefreshing = false
     var dataSource: UICollectionViewDiffableDataSource<Section, GEMovie>!
     
     func fetchData() {
@@ -40,6 +41,7 @@ class GEUpcomingMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
                 snapshot.appendSections([.first])
                 snapshot.appendItems(self.movieData)
                 self.dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+                self.isRefreshing = false
             }
         }
     }

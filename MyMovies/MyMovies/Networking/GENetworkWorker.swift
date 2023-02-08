@@ -14,6 +14,7 @@ enum GEAPIError: Error {
 
 protocol GEEnvironmentProtocol {
     var baseURL: String { get }
+    var imageBaseURL: String { get }
     var apiKeyParam: String { get }
 }
 
@@ -25,6 +26,9 @@ enum APIEnvironment: GEEnvironmentProtocol {
             return "https://api.themoviedb.org/3/"
         }
     }
+    var imageBaseURL: String {
+        return "https://image.tmdb.org/t/p/original/"
+    }
     var apiKeyParam: String {
         return "api_key=0e7274f05c36db12cbe71d9ab0393d47"
     }
@@ -32,7 +36,7 @@ enum APIEnvironment: GEEnvironmentProtocol {
 class GENetworkWorker {
     static let shared = GENetworkWorker()
     private init() {}
-    private let environment = APIEnvironment.development
+    let environment = APIEnvironment.development
     let networkQueue = DispatchQueue(label: "com.network.queue", qos: .utility)
     
     func makeRequest(query: String) -> Future<Data?, Error> {
@@ -41,7 +45,7 @@ class GENetworkWorker {
                 promis(.failure(GEAPIError.invalidURL))
             }
         }
-        debugPrint("### \(url)")
+        //debugPrint("### \(url)")
         return Future { promis in
             self.networkQueue.async {
                 URLSession.shared.dataTask(with: url) { data, response, error in
@@ -51,7 +55,6 @@ class GENetworkWorker {
                     promis(.success(data))
                 }.resume()
             }
-            
         }
     }
 }

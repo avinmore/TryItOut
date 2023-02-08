@@ -10,12 +10,11 @@ import UIKit
 class GEMoviesBaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.tintColor = .red
+        navigationController?.navigationBar.tintColor = ThemeManager.navTintColor
     }
     
     func setupCollectionView(_ controller: UIViewController & UICollectionViewDelegate) -> UICollectionView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: getCompositionalLayout())
-        collectionView.backgroundColor = UIColor.white
         collectionView.register(CGMovieCollectionViewCell.self, forCellWithReuseIdentifier: "CGMovieCollectionViewCell")
         collectionView.frame = controller.view.frame
         collectionView.delegate = controller

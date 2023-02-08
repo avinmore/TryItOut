@@ -17,7 +17,6 @@ class GENowPlayingMoviesViewController: GEMoviesBaseViewController {
         setupDataSource()
         viewModel.delegate = self
         viewModel.fetchGenreData { [weak self] in
-            self?.viewModel.setupDataSync()
             self?.viewModel.fetchData()
         }
     }
@@ -49,24 +48,22 @@ extension GENowPlayingMoviesViewController: GERefreshEventProtocol {
 }
 
 extension GENowPlayingMoviesViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let totalItemCount = self.viewModel.movieData.count
-        if indexPath.row == totalItemCount - 5 {
-            viewModel.fetchData()
-        }
-    }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movie = self.viewModel.movieData[indexPath.row]
         navigateToMovieDetails(movie.id)
     }
-}
-
-extension UIColor {
-    static var random: UIColor {
-        return UIColor(red: .random(in: 0.4...1),
-                       green: .random(in: 0.4...1),
-                       blue: .random(in: 0.4...1),
-                       alpha: 1)
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let diffHeight = contentHeight - contentOffsetY
+        let frameHeight = scrollView.bounds.size.height
+        let pullHeight  = abs(diffHeight - frameHeight)
+        debugPrint("@@ \(pullHeight)")
+        if pullHeight < 200.0 && !viewModel.isRefreshing {
+            viewModel.isRefreshing = true
+            viewModel.fetchData()
+        }
     }
 }

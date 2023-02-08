@@ -29,7 +29,7 @@ class GEMoviePosterHeader: UIView {
     lazy var posterImageView: UIImageView = {
         let iView = UIImageView(frame: CGRect(x: 16, y: frame.size.height - 75, width: 110, height: 150))
         iView.contentMode = .scaleToFill
-        iView.layer.borderColor = UIColor.white.cgColor
+        iView.layer.borderColor = ThemeManager.movieCardBorderColor.cgColor
         iView.layer.borderWidth = 2.0
         return iView
     }()
@@ -43,10 +43,10 @@ class GEMoviePosterHeader: UIView {
         guard let posterName = posterName else {
             return
         }
-        let url = URL(string: "https://image.tmdb.org/t/p/original/" + posterName)
+        let url = URL(string: GENetworkWorker.shared.environment.imageBaseURL + posterName)
         posterImageView.kf.setImage(
             with: url,
-            placeholder: UIImage(named: "loading-movie"),
+            placeholder: UIImage(named: AssetManager.loadingMovie),
             options: [
                 .processor(DownsamplingImageProcessor(size: frame.size)),
                 .scaleFactor(UIScreen.main.scale),
@@ -58,10 +58,10 @@ class GEMoviePosterHeader: UIView {
         guard let posterName = posterName else {
             return
         }
-        let url = URL(string: "https://image.tmdb.org/t/p/original/" + posterName)
+        let url = URL(string: GENetworkWorker.shared.environment.imageBaseURL + posterName)
         imageView.kf.setImage(
             with: url,
-            placeholder: UIImage(named: "loading-movie"),
+            placeholder: UIImage(named: AssetManager.loadingMovie),
             options: [
                 .processor(DownsamplingImageProcessor(size: frame.size)),
                 .scaleFactor(UIScreen.main.scale),

@@ -19,9 +19,12 @@ class GEMoviesSerachViewController: GEMoviesBaseViewController {
         collectionView.dataSource = nil
         setupDataSource()
         setupSearchBar()
-        viewModel.delegate = self
-        viewModel.setupDataSync()
         title = "Search"
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        MyMoviesUtils.showToast("Type movie name to search!!", duration: 3)
     }
     
     func setupDataSource() {
@@ -40,12 +43,12 @@ class GEMoviesSerachViewController: GEMoviesBaseViewController {
     
     func setupSearchBar() {
         navigationItem.titleView = searchController.searchBar
-        searchController.searchBar.tintColor = .white
+        searchController.searchBar.tintColor = ThemeManager.searchBarTintColor
         let textFieldInsideSearchBar = searchController.searchBar.value(forKey: "searchField") as? UITextField
-        textFieldInsideSearchBar?.textColor = .white
+        textFieldInsideSearchBar?.textColor = ThemeManager.searchBarTintColor
         let imageView = textFieldInsideSearchBar?.leftView as? UIImageView
         imageView?.image = imageView?.image?.withRenderingMode(.alwaysTemplate)
-        imageView?.tintColor = .white
+        imageView?.tintColor = ThemeManager.searchBarTintColor
         self.searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchResultsUpdater = self
     }
@@ -62,18 +65,6 @@ extension GEMoviesSerachViewController: UISearchResultsUpdating {
     }
 }
 extension GEMoviesSerachViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return viewModel.numberOfItemInSections(section)
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CGMovieCollectionViewCell", for: indexPath) as? CGMovieCollectionViewCell else {
-//            assertionFailure()
-//            return UICollectionViewCell()
-//        }
-//        cell.loadCellData(viewModel.movieForIndexPath(indexPath))
-//        return cell
-//    }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         let totalItemCount = self.viewModel.movieData.count
@@ -88,11 +79,5 @@ extension GEMoviesSerachViewController: UICollectionViewDelegate {
     }
     
 
-}
-
-extension GEMoviesSerachViewController: GERefreshEventProtocol {
-    func updateUI() {
-        //collectionView.reloadData()        
-    }
 }
 

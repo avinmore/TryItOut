@@ -13,9 +13,7 @@ class GEUpcomingMoviesViewController: GEMoviesBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
-        viewModel.delegate = self
         setupDataSource()
-        viewModel.setupDataSync()
         viewModel.fetchData()
     }
     
@@ -45,25 +43,18 @@ extension GEUpcomingMoviesViewController: UICollectionViewDelegate {
         let movie = self.viewModel.movieData[indexPath.row]
         navigateToMovieDetails(movie.id)
     }
-    
-    func isCollectionViewAtEnd(collectionView: UICollectionView) -> Bool {
-        let offset = collectionView.contentOffset.y
-        let bounds = collectionView.bounds.size.height
-        let contentSize = collectionView.contentSize.height
-        let result = offset + bounds >= contentSize
-        return result
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let totalItemCount = self.viewModel.movieData.count
-        if indexPath.row == totalItemCount - 5 {
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let diffHeight = contentHeight - contentOffsetY
+        let frameHeight = scrollView.bounds.size.height
+        let pullHeight  = abs(diffHeight - frameHeight)
+        debugPrint("@@ \(pullHeight)")
+        if pullHeight < 200.0 && !viewModel.isRefreshing {
+            viewModel.isRefreshing = true
             viewModel.fetchData()
         }
-    }
-}
-
-extension GEUpcomingMoviesViewController: GERefreshEventProtocol {
-    func updateUI() {
     }
 }
 

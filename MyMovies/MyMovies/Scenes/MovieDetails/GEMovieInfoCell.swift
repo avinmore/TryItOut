@@ -21,7 +21,7 @@ class GEMovieInfoCell: UITableViewCell {
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var overview: UILabel!
     @IBOutlet weak var languagesSpoken: UILabel!
-    
+    let toastLabel = UILabel()
     var movie: GEMovieDetailModel?
     
     func loadCelldata(_ movie: GEMovieDetailModel?) {
@@ -43,17 +43,27 @@ class GEMovieInfoCell: UITableViewCell {
     }
     @IBAction func favoriteClicked(_ sender: UIButton) {
         let status = delegate?.updateFavoriteStatus(self.movie?.id)
-        
+        var statusMessage = ""
         switch status {
         case .favorite:
-            print("favorite")
+            statusMessage = "\(self.movie?.title ?? "") added to your favorite list"
         case .yetToFavorite:
-            print("yetToFavorite")
+            statusMessage = "\(self.movie?.title ?? "") is removed from your favorite list"
         case .na:
-            print("na")
+            statusMessage = "Please try again to make it favorite"
         case .none:
-            print("na")
+            statusMessage = "Please try again to make it favorite"
         }
+        
+        UIView.animate(withDuration: 0.1, animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        }) { _ in
+            UIView.animate(withDuration: 0.1) {
+                sender.transform = CGAffineTransform.identity
+            }
+        }
+        
+        MyMoviesUtils.showToast(statusMessage, duration: 2)
     }
 
     func formatDate(_ stringDate: String) -> String {

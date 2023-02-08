@@ -55,6 +55,8 @@
 		BCA73BBF2990E06E00A5F02B /* GEFavoritesMoviesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BBE2990E06E00A5F02B /* GEFavoritesMoviesViewModel.swift */; };
 		BCA73BC22990EF6E00A5F02B /* MovieCategory+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BC02990EF6E00A5F02B /* MovieCategory+CoreDataClass.swift */; };
 		BCA73BC32990EF6E00A5F02B /* MovieCategory+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCA73BC12990EF6E00A5F02B /* MovieCategory+CoreDataProperties.swift */; };
+		BCCDFEF22993C531003EDE9F /* GEProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCCDFEF12993C531003EDE9F /* GEProtocols.swift */; };
+		BCCDFEF52993CEED003EDE9F /* MyMoviesUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCCDFEF42993CEED003EDE9F /* MyMoviesUtils.swift */; };
 		C23AC5AC33DF0DCA6FB92CFD /* Pods_MyMoviesTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE90A0E01DFE58DC3044A673 /* Pods_MyMoviesTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -131,6 +133,8 @@
 		BCA73BBE2990E06E00A5F02B /* GEFavoritesMoviesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GEFavoritesMoviesViewModel.swift; sourceTree = "<group>"; };
 		BCA73BC02990EF6E00A5F02B /* MovieCategory+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MovieCategory+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BCA73BC12990EF6E00A5F02B /* MovieCategory+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MovieCategory+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		BCCDFEF12993C531003EDE9F /* GEProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GEProtocols.swift; sourceTree = "<group>"; };
+		BCCDFEF42993CEED003EDE9F /* MyMoviesUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyMoviesUtils.swift; sourceTree = "<group>"; };
 		BD75B34E4581D07A0F481E90 /* Pods-MyMovies-MyMoviesUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovies-MyMoviesUITests.release.xcconfig"; path = "Target Support Files/Pods-MyMovies-MyMoviesUITests/Pods-MyMovies-MyMoviesUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C554D16B52A4A57DE5A49CAC /* Pods_MyMovies.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyMovies.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4C2CB22DB0BA2A34E9318AC /* Pods-MyMovies.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyMovies.debug.xcconfig"; path = "Target Support Files/Pods-MyMovies/Pods-MyMovies.debug.xcconfig"; sourceTree = "<group>"; };
@@ -203,6 +207,8 @@
 		BC96BC1B298DF8530003EDD5 /* MyMovies */ = {
 			isa = PBXGroup;
 			children = (
+				BCCDFEF32993CEDD003EDE9F /* Utils */,
+				BCCDFEF02993C501003EDE9F /* Protocol */,
 				BC96BC55298DFAD20003EDD5 /* Scenes */,
 				BC96BC54298DFAB30003EDD5 /* ViewModel */,
 				BC96BC52298DFA4F0003EDD5 /* Model */,
@@ -410,6 +416,22 @@
 				BCA73B7C298E989E00A5F02B /* GEDatabaseWorker.swift */,
 			);
 			path = "DB Handler";
+			sourceTree = "<group>";
+		};
+		BCCDFEF02993C501003EDE9F /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				BCCDFEF12993C531003EDE9F /* GEProtocols.swift */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		BCCDFEF32993CEDD003EDE9F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				BCCDFEF42993CEED003EDE9F /* MyMoviesUtils.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		CDA601547FB4A27C294F6FAC /* Frameworks */ = {
@@ -675,6 +697,7 @@
 				BCA73BB72990956900A5F02B /* GEMovieDetailsViewModel.swift in Sources */,
 				BCA73BAB298FD3E700A5F02B /* GEPopularMoviesViewModel.swift in Sources */,
 				BCA73BB529908CE500A5F02B /* GEMoviePosterHeader.swift in Sources */,
+				BCCDFEF52993CEED003EDE9F /* MyMoviesUtils.swift in Sources */,
 				BC96BC61298E00D70003EDD5 /* GEPopularMoviesViewController.swift in Sources */,
 				BCA73BBC2990DBB400A5F02B /* FavoriteMovies+CoreDataClass.swift in Sources */,
 				BCA73BA9298FCF4600A5F02B /* GEMovieBaseViewModel.swift in Sources */,
@@ -685,6 +708,7 @@
 				BCA73BB929909B0400A5F02B /* GEMovieDetailModel.swift in Sources */,
 				BCA73B61298E20B300A5F02B /* GEMoviesBaseViewController.swift in Sources */,
 				BCA73B71298E62B700A5F02B /* GENetworkWorker.swift in Sources */,
+				BCCDFEF22993C531003EDE9F /* GEProtocols.swift in Sources */,
 				BCA73BBD2990DBB400A5F02B /* FavoriteMovies+CoreDataProperties.swift in Sources */,
 				BC96BC1D298DF8530003EDD5 /* AppDelegate.swift in Sources */,
 				BCA73BA3298F321A00A5F02B /* MovieDetail+CoreDataProperties.swift in Sources */,

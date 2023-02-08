@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rootViewController.navigationItem.title = title
         navController.navigationBar.barTintColor = .black
         let textAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.red
+            NSAttributedString.Key.foregroundColor: ThemeManager.navTintColor
         ]
         navController.navigationBar.largeTitleTextAttributes = textAttributes
         navController.navigationBar.titleTextAttributes = textAttributes

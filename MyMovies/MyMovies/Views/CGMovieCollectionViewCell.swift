@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 import Kingfisher
-// https://image.tmdb.org/t/p/original/ysJte1iqN8pFQ470tumnViB1wHP.jpg
 class CGMovieCollectionViewCell: UICollectionViewCell {
     //poster, title, genre, release date (dd/mmm/yyyy), vote average and vote count
     let moviewImageView = UIImageView()
@@ -37,7 +36,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         
         layer.cornerRadius = 5
         clipsToBounds = true
-        layer.borderColor = UIColor.white.cgColor
+        layer.borderColor = ThemeManager.movieCardBorderColor.cgColor
         layer.borderWidth = 0.2
         moviewImageView.contentMode = .scaleToFill
         
@@ -61,7 +60,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         
         title.font = UIFont.boldSystemFont(ofSize: 14)
         title.numberOfLines = 2
-        title.textColor = .white
+        title.textColor = ThemeManager.titleTextColor
         title.textAlignment = .center
         title.adjustsFontSizeToFitWidth = true
         title.lineBreakMode = .byWordWrapping
@@ -77,10 +76,10 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         
         voteAvgLabel.font = UIFont.systemFont(ofSize: 13)
         voteAvgLabel.numberOfLines = 0
-        voteAvgLabel.textColor = .white
+        voteAvgLabel.textColor = ThemeManager.voteAvgLabelTextColor
         voteAvgLabel.adjustsFontSizeToFitWidth = true
         
-        voteAvgIcon.image = UIImage(named: "movie-rating")
+        voteAvgIcon.image = UIImage(named: AssetManager.movieRating)
         voteAvgStack.addArrangedSubview(voteAvgIcon)
         voteAvgStack.addArrangedSubview(voteAvgLabel)
         voteAvgIcon.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -96,8 +95,8 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         voteCountLabel.numberOfLines = 0
         voteCountLabel.adjustsFontSizeToFitWidth = true
         voteCountLabel.minimumScaleFactor = 0.8
-        voteCountLabel.textColor = .white
-        voteCountIcon.image = UIImage(named: "vote-count")
+        voteCountLabel.textColor = ThemeManager.voteCountColor
+        voteCountIcon.image = UIImage(named: AssetManager.voteCount)
         voteCountStackView.addArrangedSubview(voteCountIcon)
         voteCountStackView.addArrangedSubview(voteCountLabel)
         voteCountIcon.widthAnchor.constraint(equalToConstant: 30).isActive = true
@@ -105,12 +104,12 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         //bottom label config
         genre.font = UIFont.boldSystemFont(ofSize: 13)
         genre.numberOfLines = 0
-        genre.textColor = .white
+        genre.textColor = ThemeManager.genreTextColor
         genre.adjustsFontSizeToFitWidth = true
         
         release.font = UIFont.systemFont(ofSize: 8)
         release.numberOfLines = 0
-        release.textColor = .white
+        release.textColor = ThemeManager.releaseTextColor
         release.minimumScaleFactor = 0.6
         release.textAlignment = .right
 
@@ -147,6 +146,7 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
         addtopBottomBackgroundGradiant( .black.withAlphaComponent(0.5), color2: .clear )
         addBottomTopBackgroundGradiant(.clear, color2: .black.withAlphaComponent(0.5))
     }
+    
     lazy var topStackBackgroundView: UIView = {
         topStackBackgroundView = UIView(frame: bounds)
         return topStackBackgroundView
@@ -222,10 +222,10 @@ class CGMovieCollectionViewCell: UICollectionViewCell {
             // add default poster
             return
         }
-        let url = URL(string: "https://image.tmdb.org/t/p/original/" + posterName)
+        let url = URL(string: GENetworkWorker.shared.environment.imageBaseURL + posterName)
         moviewImageView.kf.setImage(
             with: url,
-            placeholder: UIImage(named: "loading-movie"),
+            placeholder: UIImage(named: AssetManager.loadingMovie),
             options: [
                 .processor(DownsamplingImageProcessor(size: frame.size)),
                 .scaleFactor(UIScreen.main.scale),

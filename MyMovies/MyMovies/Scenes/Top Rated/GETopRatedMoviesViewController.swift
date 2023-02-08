@@ -13,10 +13,7 @@ class GETopRatedMoviesViewController: GEMoviesBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView = setupCollectionView(self)
-        collectionView.dataSource = nil
-        viewModel.delegate = self
         setupDataSource()
-        viewModel.setupDataSync()
         viewModel.fetchData()
     }
     
@@ -46,19 +43,18 @@ extension GETopRatedMoviesViewController: UICollectionViewDelegate {
         let movie = self.viewModel.movieData[indexPath.row]
         navigateToMovieDetails(movie.id)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        let totalItemCount = self.viewModel.movieData.count
-        if indexPath.row == totalItemCount - 5 {
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentOffsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let diffHeight = contentHeight - contentOffsetY
+        let frameHeight = scrollView.bounds.size.height
+        let pullHeight  = abs(diffHeight - frameHeight)
+        if pullHeight < 200.0 && !viewModel.isRefreshing {
+            viewModel.isRefreshing = true
             viewModel.fetchData()
         }
     }
-    
-    
 }
 
-extension GETopRatedMoviesViewController: GERefreshEventProtocol {
-    func updateUI() {
-    }
-}
 

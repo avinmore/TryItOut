@@ -46,6 +46,10 @@ extension GEFavoritesMoviesViewController: UICollectionViewDataSource, UICollect
 
 extension GEFavoritesMoviesViewController: GERefreshEventProtocol {
     func updateUI() {
-        collectionView.reloadData()
+        if viewModel.favoriteMovies.isEmpty {
+            MyMoviesUtils.showToast("Add favorite movies by going to the movie details page!!", duration: 3)
+        } else {
+            collectionView.reloadData()
+        }
     }
 }

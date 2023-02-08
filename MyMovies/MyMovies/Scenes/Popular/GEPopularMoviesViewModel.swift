@@ -14,7 +14,7 @@ class GEPopularMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
     var nextPage = 1
     var movieData: [GEMovie] = []
     var dataSource: UICollectionViewDiffableDataSource<Section, GEMovie>!
-    
+    var isRefreshing = false
     func fetchData() {
         nextPage = currentPage + 1
         fetch(.popular(nextPage), Movies.self).sink { completion in
@@ -41,6 +41,7 @@ class GEPopularMoviesViewModel: GEMovieBaseViewModel, GEFetchMovieData {
                 snapshot.appendSections([.first])
                 snapshot.appendItems(self.movieData)
                 self.dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+                self.isRefreshing = false
             }
         }
     }
