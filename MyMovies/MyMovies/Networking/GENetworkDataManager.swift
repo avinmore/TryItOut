@@ -99,7 +99,6 @@ class GENetworkDataManager {
     private func responseParser<T: Codable>(_ data: Data, responseType: T.Type) -> T? {
         do {
             let decoder = JSONDecoder()
-            debugPrint(T.self)
             let result = try decoder.decode(T.self, from: data)
             return result
         } catch {

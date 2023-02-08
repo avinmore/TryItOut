@@ -60,7 +60,6 @@ extension GENowPlayingMoviesViewController: UICollectionViewDelegate {
         let diffHeight = contentHeight - contentOffsetY
         let frameHeight = scrollView.bounds.size.height
         let pullHeight  = abs(diffHeight - frameHeight)
-        debugPrint("@@ \(pullHeight)")
         if pullHeight < 200.0 && !viewModel.isRefreshing {
             viewModel.isRefreshing = true
             viewModel.fetchData()
