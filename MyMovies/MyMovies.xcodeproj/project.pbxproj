@@ -207,15 +207,14 @@
 		BC96BC1B298DF8530003EDD5 /* MyMovies */ = {
 			isa = PBXGroup;
 			children = (
-				BCCDFEF32993CEDD003EDE9F /* Utils */,
-				BCCDFEF02993C501003EDE9F /* Protocol */,
 				BC96BC55298DFAD20003EDD5 /* Scenes */,
-				BC96BC54298DFAB30003EDD5 /* ViewModel */,
 				BC96BC52298DFA4F0003EDD5 /* Model */,
 				BC96BC50298DFA1F0003EDD5 /* Views */,
 				BC96BC4F298DF9FA0003EDD5 /* AppDelegate */,
 				BC96BC51298DFA410003EDD5 /* Resources */,
 				BCA73B6E298E61C200A5F02B /* Networking */,
+				BCCDFEF32993CEDD003EDE9F /* Utils */,
+				BCCDFEF02993C501003EDE9F /* Protocol */,
 				BC96BC20298DF8530003EDD5 /* ViewController.swift */,
 				BC96BC2D298DF8540003EDD5 /* Info.plist */,
 			);
@@ -293,13 +292,6 @@
 				BC96BC25298DF8530003EDD5 /* MyMovies.xcdatamodeld */,
 			);
 			path = DB;
-			sourceTree = "<group>";
-		};
-		BC96BC54298DFAB30003EDD5 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModel;
 			sourceTree = "<group>";
 		};
 		BC96BC55298DFAD20003EDD5 /* Scenes */ = {
