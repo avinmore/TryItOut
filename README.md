@@ -1,6 +1,6 @@
 # GoldenEquator
 
-![Quick Demo]([https://imgur.com/jsPLxM1](https://drive.google.com/file/d/1bKufz2xr2Qv6aSK_SdgwbEf17aW1Nrtf/view?usp=share_link))
+![Home Page](https://drive.google.com/uc?export=download&id=1jn3170iVLq2RGAXQz3IcciBeO_8rBYvS)
 
 
 # Introduction
