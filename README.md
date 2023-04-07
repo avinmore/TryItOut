@@ -1,4 +1,4 @@
-# GoldenEquator
+# TryItOut
 
 ![Home Page](https://drive.google.com/uc?export=download&id=1jn3170iVLq2RGAXQz3IcciBeO_8rBYvS)
 
